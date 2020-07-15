@@ -2,11 +2,12 @@
 using CheatSheet.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework.Input;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,7 +31,7 @@ namespace CheatSheet.Menus
 		internal static NPC hoverNpc;
 		internal Texture2D[] textures;
 
-		private static string[] categNames = new string[]
+		private static string[] categNames =
 		{
 			CSText("AllNPCs"),
 			CSText("Bosses"),
@@ -40,17 +41,7 @@ namespace CheatSheet.Menus
 			CSText("CycleModSpecificNPCs")
 		};
 
-		private static Texture2D[] categoryIcons = new Texture2D[]
-		{
-			Main.itemTexture[ItemID.AlphabetStatueA],
-			Main.itemTexture[ItemID.AlphabetStatueB],
-			Main.itemTexture[ItemID.AlphabetStatueT],
-			Main.itemTexture[ItemID.AlphabetStatueN],
-			Main.itemTexture[ItemID.AlphabetStatueF],
-			Main.itemTexture[ItemID.AlphabetStatueM],
-		};
-
-		private bool swapFilter = false;
+		private bool swapFilter;
 
 		public NPCView npcView;
 		public CheatSheet mod;
@@ -69,7 +60,7 @@ namespace CheatSheet.Menus
 
 		private float spacing = 16f;
 
-		public int lastModNameNumber = 0;
+		public int lastModNameNumber;
 
 		private float numWidth = categNames.Length - 5; // when adding more filtering buttons, decreases textbar size
 
@@ -84,35 +75,53 @@ namespace CheatSheet.Menus
 		{
 			categories.Clear();
 			ModToNPCs.Clear();
-			this.npcView = new NPCView();
+			npcView = new NPCView();
 			this.mod = mod;
-			this.CanMove = true;
-			base.Width = this.npcView.Width + this.spacing * 2f;
-			base.Height = 300f; // 272f
-			this.npcView.Position = new Vector2(this.spacing, base.Height - this.npcView.Height - this.spacing * 3f);
-			this.AddChild(this.npcView);
-			this.ParseList2();
-			Texture2D texture = mod.GetTexture("UI/closeButton");
+			CanMove = true;
+			Width = npcView.Width + spacing * 2f;
+			Height = 300f; // 272f
+			npcView.Position = new Vector2(spacing, Height - npcView.Height - spacing * 3f);
+			AddChild(npcView);
+			ParseList2();
+			Texture2D texture = mod.GetTexture("UI/closeButton").Value;
 			UIImage uIImage = new UIImage(texture);
 			uIImage.Anchor = AnchorPosition.TopRight;
-			uIImage.Position = new Vector2(base.Width - this.spacing, this.spacing);
-			uIImage.onLeftClick += new EventHandler(this.bClose_onLeftClick);
-			this.AddChild(uIImage);
-			this.textbox = new UITextbox();
-			this.textbox.Anchor = AnchorPosition.BottomLeft;
+			uIImage.Position = new Vector2(Width - spacing, spacing);
+			uIImage.onLeftClick += bClose_onLeftClick;
+			AddChild(uIImage);
+			textbox = new UITextbox();
+			textbox.Anchor = AnchorPosition.BottomLeft;
 			//this.textbox.Position = new Vector2(base.Width - this.spacing * 2f + uIImage.Width * numWidth * 2, this.spacing /** 2f + uIImage.Height*/);
-			this.textbox.Position = new Vector2(this.spacing, base.Height - this.spacing);
-			this.textbox.KeyPressed += new UITextbox.KeyPressedHandler(this.textbox_KeyPressed);
-			this.AddChild(this.textbox);
-			bCategories = new UIImage[categoryIcons.Length];
-			for (int j = 0; j < NPCBrowser.categoryIcons.Length; j++)
+			textbox.Position = new Vector2(spacing, Height - spacing);
+			textbox.KeyPressed += textbox_KeyPressed;
+			AddChild(textbox);
+			
+			Main.instance.LoadItem(ItemID.AlphabetStatueA);
+			Main.instance.LoadItem(ItemID.AlphabetStatueB);
+			Main.instance.LoadItem(ItemID.AlphabetStatueT);
+			Main.instance.LoadItem(ItemID.AlphabetStatueN);
+			Main.instance.LoadItem(ItemID.AlphabetStatueF);
+			Main.instance.LoadItem(ItemID.AlphabetStatueM);
+			
+			Texture2D[] categoryIcons =
 			{
-				UIImage uIImage2 = new UIImage(NPCBrowser.categoryIcons[j]);
-				Vector2 position = new Vector2(this.spacing, this.spacing);
+				TextureAssets.Item[ItemID.AlphabetStatueA].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueB].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueT].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueN].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueF].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueM].Value,
+			};
+			
+			bCategories = new UIImage[categoryIcons.Length];
+			for (int j = 0; j < categoryIcons.Length; j++)
+			{
+				UIImage uIImage2 = new UIImage(categoryIcons[j]);
+				Vector2 position = new Vector2(spacing, spacing);
 				uIImage2.Scale = 32f / Math.Max(categoryIcons[j].Width, categoryIcons[j].Height);
 
-				position.X += (float)(j % 6 * 40);
-				position.Y += (float)(j / 6 * 40);
+				position.X += j % 6 * 40;
+				position.Y += j / 6 * 40;
 
 				if (categoryIcons[j].Height > categoryIcons[j].Width)
 				{
@@ -127,24 +136,26 @@ namespace CheatSheet.Menus
 				uIImage2.Tag = j;
 				uIImage2.onLeftClick += (s, e) => buttonClick(s, e, true);
 				uIImage2.onRightClick += (s, e) => buttonClick(s, e, false);
-				uIImage2.ForegroundColor = NPCBrowser.buttonColor;
+				uIImage2.ForegroundColor = buttonColor;
 				if (j == 0)
 				{
-					uIImage2.ForegroundColor = NPCBrowser.buttonSelectedColor;
+					uIImage2.ForegroundColor = buttonSelectedColor;
 				}
-				uIImage2.Tooltip = NPCBrowser.categNames[j];
-				NPCBrowser.bCategories[j] = uIImage2;
-				this.AddChild(uIImage2);
+
+				uIImage2.Tooltip = categNames[j];
+				bCategories[j] = uIImage2;
+				AddChild(uIImage2);
 			}
-			npcView.selectedCategory = NPCBrowser.categories[0].ToArray();
+
+			npcView.selectedCategory = categories[0].ToArray();
 			npcView.activeSlots = npcView.selectedCategory;
 			npcView.ReorderSlots();
 			textures = new Texture2D[]
 			{
-				mod.GetTexture("UI/NPCLifeIcon"),
-				mod.GetTexture("UI/NPCDamageIcon"),
-				mod.GetTexture("UI/NPCDefenseIcon"),
-				mod.GetTexture("UI/NPCKnockbackIcon"),
+				mod.GetTexture("UI/NPCLifeIcon").Value,
+				mod.GetTexture("UI/NPCDamageIcon").Value,
+				mod.GetTexture("UI/NPCDefenseIcon").Value,
+				mod.GetTexture("UI/NPCKnockbackIcon").Value,
 			};
 		}
 
@@ -155,20 +166,22 @@ namespace CheatSheet.Menus
 			if (Visible && IsMouseInside())
 			{
 				Main.LocalPlayer.mouseInterface = true;
-				Main.LocalPlayer.showItemIcon = false;
+				Main.LocalPlayer.cursorItemIconEnabled = false;
 			}
 
-			float x = Main.fontMouseText.MeasureString(UIView.HoverText).X;
-			Vector2 vector = new Vector2((float)Main.mouseX, (float)Main.mouseY) + new Vector2(16f);
-			if (vector.Y > (float)(Main.screenHeight - 30))
+			float x = FontAssets.MouseText.Value.MeasureString(HoverText).X;
+			Vector2 vector = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16f);
+			if (vector.Y > Main.screenHeight - 30)
 			{
-				vector.Y = (float)(Main.screenHeight - 30);
+				vector.Y = Main.screenHeight - 30;
 			}
-			if (vector.X > (float)Main.screenWidth - x)
+
+			if (vector.X > Main.screenWidth - x)
 			{
-				vector.X = (float)(Main.screenWidth - 460);
+				vector.X = Main.screenWidth - 460;
 			}
-			Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
+
+			Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, HoverText, vector.X, vector.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, Vector2.Zero);
 
 			if (hoverNpc != null)
 			{
@@ -184,8 +197,8 @@ namespace CheatSheet.Menus
 				{
 					spriteBatch.Draw(textures[i], pos, Color.White);
 					pos.X += textures[i].Width + 4;
-					Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, texts[i], pos.X, pos.Y, Color.White, Color.Black, Vector2.Zero, 1f);
-					pos.X += Main.fontMouseText.MeasureString(texts[i]).X + 8;
+					Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, texts[i], pos.X, pos.Y, Color.White, Color.Black, Vector2.Zero);
+					pos.X += FontAssets.MouseText.Value.MeasureString(texts[i]).X + 8;
 				}
 			}
 		}
@@ -198,18 +211,20 @@ namespace CheatSheet.Menus
 				{
 					npcslot.isFiltered = filteredNPCSlots.Contains(npcslot.netID);
 				}
+
 				needsUpdate = false;
 			}
+
 			var mouseState = Mouse.GetState();
-			UIView.MousePrevLeftButton = UIView.MouseLeftButton;
-			UIView.MouseLeftButton = mouseState.LeftButton==ButtonState.Pressed;
-			UIView.MousePrevRightButton = UIView.MouseRightButton;
-			UIView.MouseRightButton = mouseState.RightButton==ButtonState.Pressed;
-			UIView.ScrollAmount = PlayerInput.ScrollWheelDeltaForUI;
+			MousePrevLeftButton = MouseLeftButton;
+			MouseLeftButton = mouseState.LeftButton == ButtonState.Pressed;
+			MousePrevRightButton = MouseRightButton;
+			MouseRightButton = mouseState.RightButton == ButtonState.Pressed;
+			ScrollAmount = PlayerInput.ScrollWheelDeltaForUI;
 			//UIView.ScrollAmount = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 2;
 			//UIView.HoverItem = UIView.EmptyItem;
-			UIView.HoverText = "";
-			UIView.HoverOverridden = false;
+			HoverText = "";
+			HoverOverridden = false;
 			hoverNpc = null;
 
 			base.Update();
@@ -228,19 +243,20 @@ namespace CheatSheet.Menus
 			int num = (int)uIImage.Tag;
 			if (num == (int)NPCBrowserCategories.ModNPCs)
 			{
-				var mods = NPCBrowser.ModToNPCs.Keys.ToList();
+				var mods = ModToNPCs.Keys.ToList();
 				mods.Sort();
-				if(mods.Count == 0) {
+				if (mods.Count == 0)
+				{
 					Main.NewText("No NPC have been added by mods.");
 				}
-				else {
-					if (uIImage.ForegroundColor == NPCBrowser.buttonSelectedColor)
-						lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
+				else
+				{
+					if (uIImage.ForegroundColor == buttonSelectedColor) lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
 					string currentMod = mods[lastModNameNumber];
-					this.npcView.selectedCategory = NPCBrowser.categories[0].Where(x => npcView.allNPCSlot[x].npcType >= NPCID.Count && NPCLoader.GetNPC(npcView.allNPCSlot[x].npcType).mod.Name == currentMod).ToArray();
-					this.npcView.activeSlots = this.npcView.selectedCategory;
-					this.npcView.ReorderSlots();
-					bCategories[num].Tooltip = NPCBrowser.categNames[num] + ": " + currentMod;
+					npcView.selectedCategory = categories[0].Where(x => npcView.allNPCSlot[x].npcType >= NPCID.Count && NPCLoader.GetNPC(npcView.allNPCSlot[x].npcType).mod.Name == currentMod).ToArray();
+					npcView.activeSlots = npcView.selectedCategory;
+					npcView.ReorderSlots();
+					bCategories[num].Tooltip = categNames[num] + ": " + currentMod;
 				}
 			}
 			else if (num == (int)NPCBrowserCategories.FilteredNPCs)
@@ -248,94 +264,101 @@ namespace CheatSheet.Menus
 				swapFilter = !swapFilter;
 				if (swapFilter)
 				{
-					this.npcView.selectedCategory = NPCBrowser.categories[0].Where(x => npcView.allNPCSlot[x].isFiltered).ToArray();
+					npcView.selectedCategory = categories[0].Where(x => npcView.allNPCSlot[x].isFiltered).ToArray();
 				}
 				else
 				{
-					this.npcView.selectedCategory = NPCBrowser.categories[0].Where(x => !npcView.allNPCSlot[x].isFiltered).ToArray();
+					npcView.selectedCategory = categories[0].Where(x => !npcView.allNPCSlot[x].isFiltered).ToArray();
 				}
-				this.npcView.activeSlots = this.npcView.selectedCategory;
-				this.npcView.ReorderSlots();
-				bCategories[num].Tooltip = NPCBrowser.categNames[num] + " [" + (swapFilter ? "DISABLED" : "ENABLED") + " NPCs]";
+
+				npcView.activeSlots = npcView.selectedCategory;
+				npcView.ReorderSlots();
+				bCategories[num].Tooltip = categNames[num] + " [" + (swapFilter ? "DISABLED" : "ENABLED") + " NPCs]";
 			}
 			else
 			{
-				this.npcView.selectedCategory = NPCBrowser.categories[num].ToArray();
-				this.npcView.activeSlots = this.npcView.selectedCategory;
-				this.npcView.ReorderSlots();
+				npcView.selectedCategory = categories[num].ToArray();
+				npcView.activeSlots = npcView.selectedCategory;
+				npcView.ReorderSlots();
 			}
-			this.textbox.Text = "";
-			UIImage[] array = NPCBrowser.bCategories;
+
+			textbox.Text = "";
+			UIImage[] array = bCategories;
 			for (int j = 0; j < array.Length; j++)
 			{
 				UIImage uIImage2 = array[j];
-				uIImage2.ForegroundColor = NPCBrowser.buttonColor;
+				uIImage2.ForegroundColor = buttonColor;
 			}
-			uIImage.ForegroundColor = NPCBrowser.buttonSelectedColor;
+
+			uIImage.ForegroundColor = buttonSelectedColor;
 		}
 
 		private void textbox_KeyPressed(object sender, char key)
 		{
-			if (this.textbox.Text.Length <= 0)
+			if (textbox.Text.Length <= 0)
 			{
-				this.npcView.activeSlots = this.npcView.selectedCategory;
-				this.npcView.ReorderSlots();
+				npcView.activeSlots = npcView.selectedCategory;
+				npcView.ReorderSlots();
 				return;
 			}
+
 			List<int> list = new List<int>();
-			int[] category = this.npcView.selectedCategory;
+			int[] category = npcView.selectedCategory;
 			for (int i = 0; i < category.Length; i++)
 			{
 				int num = category[i];
-				NPCSlot slot = this.npcView.allNPCSlot[num];
-				if (slot.displayName.ToLower().IndexOf(this.textbox.Text.ToLower(), StringComparison.Ordinal) != -1)
+				NPCSlot slot = npcView.allNPCSlot[num];
+				if (slot.displayName.ToLower().IndexOf(textbox.Text.ToLower(), StringComparison.Ordinal) != -1)
 				{
 					list.Add(num);
 				}
 			}
+
 			if (list.Count > 0)
 			{
-				this.npcView.activeSlots = list.ToArray();
-				this.npcView.ReorderSlots();
+				npcView.activeSlots = list.ToArray();
+				npcView.ReorderSlots();
 				return;
 			}
-			this.textbox.Text = this.textbox.Text.Substring(0, this.textbox.Text.Length - 1);
+
+			textbox.Text = textbox.Text.Substring(0, textbox.Text.Length - 1);
 		}
 
 		private void ParseList2()
 		{
 			//	NPCBrowser.categoryNames = NPCBrowser.categNames.ToList<string>();
-			for (int i = 0; i < NPCBrowser.categNames.Length; i++)
+			for (int i = 0; i < categNames.Length; i++)
 			{
-				NPCBrowser.categories.Add(new List<int>());
-				for (int j = 0; j < this.npcView.allNPCSlot.Length; j++)
+				categories.Add(new List<int>());
+				for (int j = 0; j < npcView.allNPCSlot.Length; j++)
 				{
 					if (i == 0)
 					{
-						NPCBrowser.categories[i].Add(j);
-						if (npcView.allNPCSlot[j].npc.type >= NPCID.Count) {
+						categories[i].Add(j);
+						if (npcView.allNPCSlot[j].npc.type >= NPCID.Count)
+						{
 							string modName = NPCLoader.GetNPC(j).mod.Name;
 							List<int> npcInMod;
-							if (!NPCBrowser.ModToNPCs.TryGetValue(modName, out npcInMod))
-								NPCBrowser.ModToNPCs.Add(modName, npcInMod = new List<int>());
+							if (!ModToNPCs.TryGetValue(modName, out npcInMod)) ModToNPCs.Add(modName, npcInMod = new List<int>());
 							npcInMod.Add(j);
 						}
 					}
 					else if (i == 1 && npcView.allNPCSlot[j].npc.boss)
 					{
-						NPCBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == 2 && npcView.allNPCSlot[j].npc.townNPC)
 					{
-						NPCBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == 3 && npcView.allNPCSlot[j].npc.netID < 0)
 					{
-						NPCBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 				}
 			}
-			this.npcView.selectedCategory = NPCBrowser.categories[0].ToArray();
+
+			npcView.selectedCategory = categories[0].ToArray();
 		}
 
 		// Server and Client capable.

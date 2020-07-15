@@ -4,40 +4,41 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 
 namespace CheatSheet.Menus
 {
 	internal class RecipeSlot : UIView
 	{
-		public static Texture2D backgroundTexture = Main.inventoryBack9Texture;
-		public static Texture2D selectedBackgroundTexture = Main.inventoryBack15Texture;
+		public static Texture2D backgroundTexture = TextureAssets.InventoryBack9.Value;
+		public static Texture2D selectedBackgroundTexture = TextureAssets.InventoryBack15.Value;
 
 		public int recipeIndex = -1;
 		public Recipe recipe;
 
 		public RecipeSlot(int recipeIndex)
 		{
-			this.Init(recipeIndex);
+			Init(recipeIndex);
 		}
 
 		private void Init(int recipeIndex)
 		{
-			base.Scale = 0.85f;
+			Scale = 0.85f;
 			this.recipeIndex = recipeIndex;
-			this.recipe = Main.recipe[recipeIndex];
+			recipe = Main.recipe[recipeIndex];
 
-			base.onLeftClick += new EventHandler(this.Slot_onLeftClick);
-			base.onHover += new EventHandler(this.Slot_onHover);
+			onLeftClick += Slot_onLeftClick;
+			onHover += Slot_onHover;
 		}
 
 		protected override float GetWidth()
 		{
-			return (float)Slot.backgroundTexture.Width * base.Scale;
+			return Slot.backgroundTexture.Width * Scale;
 		}
 
 		protected override float GetHeight()
 		{
-			return (float)Slot.backgroundTexture.Height * base.Scale;
+			return Slot.backgroundTexture.Height * Scale;
 		}
 
 		private void Slot_onHover(object sender, EventArgs e)
@@ -61,6 +62,7 @@ namespace CheatSheet.Menus
 			{
 				RecipeBrowserWindow.lookupItemSlot.ReplaceWithFake(recipe.createItem.type);
 			}
+
 			doubleClickTimer = Main.time;
 		}
 
@@ -68,13 +70,14 @@ namespace CheatSheet.Menus
 		{
 			if (((Parent as RecipeView).Parent as RecipeBrowserWindow).selectedRecipe == recipe)
 			{
-				spriteBatch.Draw(RecipeSlot.selectedBackgroundTexture, base.DrawPosition, null, Color.White, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(selectedBackgroundTexture, DrawPosition, null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 			}
 			else
 			{
-				spriteBatch.Draw(RecipeSlot.backgroundTexture, base.DrawPosition, null, Color.White, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
+				spriteBatch.Draw(backgroundTexture, DrawPosition, null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 			}
-			Texture2D texture2D = Main.itemTexture[this.recipe.createItem.type];
+
+			Texture2D texture2D = TextureAssets.Item[recipe.createItem.type].Value;
 			Rectangle rectangle2;
 			if (Main.itemAnimations[recipe.createItem.type] != null)
 			{
@@ -82,34 +85,38 @@ namespace CheatSheet.Menus
 			}
 			else
 			{
-				rectangle2 = texture2D.Frame(1, 1, 0, 0);
+				rectangle2 = texture2D.Frame();
 			}
+
 			float num = 1f;
-			float num2 = (float)RecipeSlot.backgroundTexture.Width * base.Scale * 0.6f;
-			if ((float)rectangle2.Width > num2 || (float)rectangle2.Height > num2)
+			float num2 = backgroundTexture.Width * Scale * 0.6f;
+			if (rectangle2.Width > num2 || rectangle2.Height > num2)
 			{
 				if (rectangle2.Width > rectangle2.Height)
 				{
-					num = num2 / (float)rectangle2.Width;
+					num = num2 / rectangle2.Width;
 				}
 				else
 				{
-					num = num2 / (float)rectangle2.Height;
+					num = num2 / rectangle2.Height;
 				}
 			}
-			Vector2 drawPosition = base.DrawPosition;
-			drawPosition.X += (float)RecipeSlot.backgroundTexture.Width * base.Scale / 2f - (float)rectangle2.Width * num / 2f;
-			drawPosition.Y += (float)RecipeSlot.backgroundTexture.Height * base.Scale / 2f - (float)rectangle2.Height * num / 2f;
-			this.recipe.createItem.GetColor(Color.White);
-			spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), this.recipe.createItem.GetAlpha(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
-			if (this.recipe.createItem.color != default(Color))
+
+			Vector2 drawPosition = DrawPosition;
+			drawPosition.X += backgroundTexture.Width * Scale / 2f - rectangle2.Width * num / 2f;
+			drawPosition.Y += backgroundTexture.Height * Scale / 2f - rectangle2.Height * num / 2f;
+			recipe.createItem.GetColor(Color.White);
+			spriteBatch.Draw(texture2D, drawPosition, rectangle2, recipe.createItem.GetAlpha(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
+			if (recipe.createItem.color != default)
 			{
-				spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), this.recipe.createItem.GetColor(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture2D, drawPosition, rectangle2, recipe.createItem.GetColor(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
 			}
-			if (this.recipe.createItem.stack > 1)
+
+			if (recipe.createItem.stack > 1)
 			{
-				spriteBatch.DrawString(Main.fontItemStack, this.recipe.createItem.stack.ToString(), new Vector2(base.DrawPosition.X + 10f * base.Scale, base.DrawPosition.Y + 26f * base.Scale), Color.White, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
+				spriteBatch.DrawString(FontAssets.ItemStack.Value, recipe.createItem.stack.ToString(), new Vector2(DrawPosition.X + 10f * Scale, DrawPosition.Y + 26f * Scale), Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 			}
+
 			base.Draw(spriteBatch);
 		}
 	}

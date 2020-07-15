@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 
 namespace CheatSheet.Menus
 {
@@ -11,8 +12,10 @@ namespace CheatSheet.Menus
 		//public Item item = new Item();
 
 		public int npcType = -1;
-		public int netID = 0;
+		public int netID;
+
 		public NPC npc = new NPC();
+
 		//private static NPC syncNPC;
 		public string displayName = "";
 
@@ -20,29 +23,29 @@ namespace CheatSheet.Menus
 		public bool isTown;
 		public bool isFiltered;
 
-		public int index = 0;
+		public int index;
 
-		public static Texture2D backgroundTexture = Main.inventoryBack9Texture;
-		public static Texture2D filteredBackgroundTexture = Main.inventoryBack5Texture;
+		public static Texture2D backgroundTexture = TextureAssets.InventoryBack9.Value;
+		public static Texture2D filteredBackgroundTexture = TextureAssets.InventoryBack5.Value;
 
 		public bool functionalSlot;
 		private bool rightClicking;
 
 		public NPCSlot(Vector2 position, int npcNum, int index)
 		{
-			base.Position = position;
-			this.Init(npcNum, index);
+			Position = position;
+			Init(npcNum, index);
 		}
 
 		public NPCSlot(int npcNum, int index)
 		{
-			this.Init(npcNum, index);
+			Init(npcNum, index);
 		}
 
 		private void Init(int npcNum, int index)
 		{
 			//npcType = npcNum;
-			base.Scale = 0.85f;
+			Scale = 0.85f;
 			this.index = index;
 			isFiltered = false;
 			//	npc.netDefaults(npcNum);
@@ -56,8 +59,8 @@ namespace CheatSheet.Menus
 			//	this.isBoss = npc.boss;
 			//	this.isTown = npc.townNPC;
 			//	ErrorLogger.Log("sD" + npcNum + " " + npc.type + " " + npc.boss);
-			base.onLeftClick += new EventHandler(this.Slot2_onLeftClick);
-			base.onRightClick += (s, e) =>
+			onLeftClick += Slot2_onLeftClick;
+			onRightClick += (s, e) =>
 			{
 				if (Main.netMode == 1)
 				{
@@ -77,22 +80,22 @@ namespace CheatSheet.Menus
 					ConfigurationLoader.SaveSetting();
 				}
 			};
-			base.onHover += new EventHandler(this.Slot2_onHover);
+			onHover += Slot2_onHover;
 		}
 
 		protected override float GetWidth()
 		{
-			return (float)Slot.backgroundTexture.Width * base.Scale;
+			return Slot.backgroundTexture.Width * Scale;
 		}
 
 		protected override float GetHeight()
 		{
-			return (float)Slot.backgroundTexture.Height * base.Scale;
+			return Slot.backgroundTexture.Height * Scale;
 		}
 
 		private void Slot2_onHover(object sender, EventArgs e)
 		{
-			UIView.HoverText = displayName + (npc.modNPC != null ? " [" + npc.modNPC.mod.Name + "]" : "") + (isFiltered ? " [DISABLED]" : "");
+			HoverText = displayName + (npc.modNPC != null ? " [" + npc.modNPC.mod.Name + "]" : "") + (isFiltered ? " [DISABLED]" : "");
 			NPCBrowser.hoverNpc = npc;
 			//UIView.HoverItem = this.item.Clone();
 			//	hovering = true;
@@ -106,7 +109,7 @@ namespace CheatSheet.Menus
 		private void Slot2_onLeftClick(object sender, EventArgs e)
 		{
 			if (isFiltered) return;
-			HandleNPC(npcType, netID, false);
+			HandleNPC(npcType, netID);
 		}
 
 		//public static void HandleFilterRequest(int netID, int whoAmI = 0, bool forceHandle = false)
@@ -236,6 +239,7 @@ namespace CheatSheet.Menus
 			{
 				player = Main.player[whoAmI];
 			}
+
 			int x = (int)player.Bottom.X + player.direction * 200;
 			int y = (int)player.Bottom.Y;
 			int index = NPC.NewNPC(x, y, type);
@@ -253,27 +257,28 @@ namespace CheatSheet.Menus
 
 			Texture2D useBackgroundTexture = isFiltered ? filteredBackgroundTexture : backgroundTexture;
 
-			spriteBatch.Draw(useBackgroundTexture, base.DrawPosition, null, base.BackgroundColor, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
-			Texture2D texture2D = Main.npcTexture[npcType];
+			spriteBatch.Draw(useBackgroundTexture, DrawPosition, null, BackgroundColor, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+			Texture2D texture2D = TextureAssets.Npc[npcType].Value;
 			Rectangle rectangle2;
-			rectangle2 = new Rectangle(0, 0, Main.npcTexture[npcType].Width, Main.npcTexture[npcType].Height / Main.npcFrameCount[npcType]);
+			rectangle2 = new Rectangle(0, 0, TextureAssets.Npc[npcType].Value.Width, TextureAssets.Npc[npcType].Value.Height / Main.npcFrameCount[npcType]);
 
 			float num = 1f;
-			float num2 = (float)Slot.backgroundTexture.Width * base.Scale * 0.6f;
-			if ((float)rectangle2.Width > num2 || (float)rectangle2.Height > num2)
+			float num2 = Slot.backgroundTexture.Width * Scale * 0.6f;
+			if (rectangle2.Width > num2 || rectangle2.Height > num2)
 			{
 				if (rectangle2.Width > rectangle2.Height)
 				{
-					num = num2 / (float)rectangle2.Width;
+					num = num2 / rectangle2.Width;
 				}
 				else
 				{
-					num = num2 / (float)rectangle2.Height;
+					num = num2 / rectangle2.Height;
 				}
 			}
-			Vector2 drawPosition = base.DrawPosition;
-			drawPosition.X += (float)Slot.backgroundTexture.Width * base.Scale / 2f - (float)rectangle2.Width * num / 2f;
-			drawPosition.Y += (float)Slot.backgroundTexture.Height * base.Scale / 2f - (float)rectangle2.Height * num / 2f;
+
+			Vector2 drawPosition = DrawPosition;
+			drawPosition.X += Slot.backgroundTexture.Width * Scale / 2f - rectangle2.Width * num / 2f;
+			drawPosition.Y += Slot.backgroundTexture.Height * Scale / 2f - rectangle2.Height * num / 2f;
 
 			//Color color =  new Color(1f, 1f, 1f);//this.item.GetColor(Color.White);
 			//Color color = (npc.color != new Color(byte.MinValue, byte.MinValue, byte.MinValue, byte.MinValue)) ? new Color(npc.color.R, npc.color.G, npc.color.B, 255f) : new Color(1f, 1f, 1f);
@@ -282,11 +287,12 @@ namespace CheatSheet.Menus
 			//{
 			//	spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), this.item.GetColor(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
 			//}
-			spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), Color.White, 0, Vector2.Zero, num, SpriteEffects.None, 0f);
-			if (npc.color != default(Color))
+			spriteBatch.Draw(texture2D, drawPosition, rectangle2, Color.White, 0, Vector2.Zero, num, SpriteEffects.None, 0f);
+			if (npc.color != default)
 			{
-				spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), npc.color, 0, Vector2.Zero, num, SpriteEffects.None, 0f);
+				spriteBatch.Draw(texture2D, drawPosition, rectangle2, npc.color, 0, Vector2.Zero, num, SpriteEffects.None, 0f);
 			}
+
 			base.Draw(spriteBatch);
 		}
 	}
@@ -295,8 +301,8 @@ namespace CheatSheet.Menus
 /*
 			Microsoft.Xna.Framework.Color color9 = Lighting.GetColor((int)((double)Main.npc[i].position.X + (double)Main.npc[i].width * 0.5) / 16, (int)(((double)Main.npc[i].position.Y + (double)Main.npc[i].height * 0.5) / 16.0));
 
-	Main.spriteBatch.Draw(Main.npcTexture[type],
-	new Vector2(Main.npc[i].position.X - Main.screenPosition.X + (float)(Main.npc[i].width / 2) - (float)Main.npcTexture[type].Width * Main.npc[i].scale / 2f + vector10.X * Main.npc[i].scale, Main.npc[i].position.Y - Main.screenPosition.Y + (float)Main.npc[i].height - (float)Main.npcTexture[type].Height * Main.npc[i].scale / (float)Main.npcFrameCount[type] + 4f + vector10.Y * Main.npc[i].scale + num66 + num65 + Main.npc[i].gfxOffY),
+	Main.spriteBatch.Draw(TextureAssets.Npc[type],
+	new Vector2(Main.npc[i].position.X - Main.screenPosition.X + (float)(Main.npc[i].width / 2) - (float)TextureAssets.Npc[type].Width * Main.npc[i].scale / 2f + vector10.X * Main.npc[i].scale, Main.npc[i].position.Y - Main.screenPosition.Y + (float)Main.npc[i].height - (float)TextureAssets.Npc[type].Height * Main.npc[i].scale / (float)Main.npcFrameCount[type] + 4f + vector10.Y * Main.npc[i].scale + num66 + num65 + Main.npc[i].gfxOffY),
 	new Microsoft.Xna.Framework.Rectangle?(frame4),
 	Main.npc[i].GetAlpha(color9),
 	Main.npc[i].rotation,
@@ -306,6 +312,6 @@ namespace CheatSheet.Menus
 	0f);
 									if (Main.npc[i].color != default(Microsoft.Xna.Framework.Color))
 									{
-										Main.spriteBatch.Draw(Main.npcTexture[type], new Vector2(Main.npc[i].position.X - Main.screenPosition.X + (float)(Main.npc[i].width / 2) - (float)Main.npcTexture[type].Width * Main.npc[i].scale / 2f + vector10.X * Main.npc[i].scale, Main.npc[i].position.Y - Main.screenPosition.Y + (float)Main.npc[i].height - (float)Main.npcTexture[type].Height * Main.npc[i].scale / (float)Main.npcFrameCount[type] + 4f + vector10.Y * Main.npc[i].scale + num66 + num65 + Main.npc[i].gfxOffY), new Microsoft.Xna.Framework.Rectangle?(frame4), Main.npc[i].GetColor(color9), Main.npc[i].rotation, vector10, Main.npc[i].scale, spriteEffects, 0f);
+										Main.spriteBatch.Draw(TextureAssets.Npc[type], new Vector2(Main.npc[i].position.X - Main.screenPosition.X + (float)(Main.npc[i].width / 2) - (float)TextureAssets.Npc[type].Width * Main.npc[i].scale / 2f + vector10.X * Main.npc[i].scale, Main.npc[i].position.Y - Main.screenPosition.Y + (float)Main.npc[i].height - (float)TextureAssets.Npc[type].Height * Main.npc[i].scale / (float)Main.npcFrameCount[type] + 4f + vector10.Y * Main.npc[i].scale + num66 + num65 + Main.npc[i].gfxOffY), new Microsoft.Xna.Framework.Rectangle?(frame4), Main.npc[i].GetColor(color9), Main.npc[i].rotation, vector10, Main.npc[i].scale, spriteEffects, 0f);
 									}
 */

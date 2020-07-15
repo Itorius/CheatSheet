@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,9 +24,9 @@ namespace CheatSheet.Menus
 			bossDownerWindow.SetDefaultPosition(new Vector2(200, 200));
 			bossDownerWindow.Visible = false;
 
-			button = new UIImage(Main.itemTexture[ItemID.MechanicalSkull]);
+			button = new UIImage(TextureAssets.Item[ItemID.MechanicalSkull].Value);
 			button.Tooltip = "Open Boss Downer";
-			button.onLeftClick += new EventHandler(bBossDownerToggle_onLeftClick);
+			button.onLeftClick += bBossDownerToggle_onLeftClick;
 			//+= (s, e) =>
 			//{
 			//	configurationWindow.selected = true;
@@ -39,9 +40,9 @@ namespace CheatSheet.Menus
 		{
 			UIImage uIImage = (UIImage)sender;
 
-			if (BossDowner.bossDownerWindow.selected)
+			if (bossDownerWindow.selected)
 			{
-				BossDowner.bossDownerWindow.selected = false;
+				bossDownerWindow.selected = false;
 				uIImage.ForegroundColor = Hotbar.buttonUnselectedColor;
 			}
 			else
@@ -61,38 +62,41 @@ namespace CheatSheet.Menus
 		public BossDownerWindow(Mod mod)
 		{
 			this.mod = mod;
-			this.CanMove = true;
-			base.Width = 450;
-			base.Height = 357;
+			CanMove = true;
+			Width = 450;
+			Height = 357;
 
-			Texture2D texture = mod.GetTexture("UI/closeButton");
+			Texture2D texture = mod.GetTexture("UI/closeButton").Value;
 			UIImage uIImage = new UIImage(texture);
 			uIImage.Anchor = AnchorPosition.TopRight;
-			uIImage.Position = new Vector2(base.Width - this.spacing, this.spacing);
-			uIImage.onLeftClick += new EventHandler(this.bClose_onLeftClick);
-			this.AddChild(uIImage);
+			uIImage.Position = new Vector2(Width - spacing, spacing);
+			uIImage.onLeftClick += bClose_onLeftClick;
+			AddChild(uIImage);
 
-			string[] labels = new string[] { "Eye of Cthulhu", "Eater of Worlds / Brain of Cthulhu", "Skeletron", "Plantera", "Golem", "The Destroyer", "The Twins",
-				"Skeletron Prime", "Ancient Cultist", "Nebula Pillar", "Vortex Pillar","Solar Pillar","Stardust Pillar","Moonlord",
+			string[] labels =
+			{
+				"Eye of Cthulhu", "Eater of Worlds / Brain of Cthulhu", "Skeletron", "Plantera", "Golem", "The Destroyer", "The Twins",
+				"Skeletron Prime", "Ancient Cultist", "Nebula Pillar", "Vortex Pillar", "Solar Pillar", "Stardust Pillar", "Moonlord",
 			};
 			UICheckbox[] cb = new UICheckbox[labels.Length];
 
-			bool[] selecteds = new bool[] {
+			bool[] selecteds =
+			{
 				NPC.downedBoss1, // eye of cthulhu
-                NPC.downedBoss2, // eater of worlds // brain of cthulhu
-                NPC.downedBoss3, // skeletron
-                NPC.downedPlantBoss, // plantera
-                NPC.downedGolemBoss, // golem
-                NPC.downedMechBoss1, // the destroyer
-                NPC.downedMechBoss2, // the twins
-                NPC.downedMechBoss3, // skeletron prime
-                NPC.downedAncientCultist, // cultist
-                NPC.downedTowerNebula, // nebula pillar
-                NPC.downedTowerVortex, // vortex pillar
-                NPC.downedTowerSolar, // solar pillar
-                NPC.downedTowerStardust, // stardust pillar
-                NPC.downedMoonlord, // moonlord
-            };
+				NPC.downedBoss2, // eater of worlds // brain of cthulhu
+				NPC.downedBoss3, // skeletron
+				NPC.downedPlantBoss, // plantera
+				NPC.downedGolemBoss, // golem
+				NPC.downedMechBoss1, // the destroyer
+				NPC.downedMechBoss2, // the twins
+				NPC.downedMechBoss3, // skeletron prime
+				NPC.downedAncientCultist, // cultist
+				NPC.downedTowerNebula, // nebula pillar
+				NPC.downedTowerVortex, // vortex pillar
+				NPC.downedTowerSolar, // solar pillar
+				NPC.downedTowerStardust, // stardust pillar
+				NPC.downedMoonlord, // moonlord
+			};
 
 			for (int i = 0; i < cb.Length; i++)
 			{
@@ -100,7 +104,7 @@ namespace CheatSheet.Menus
 				cb[i].Selected = selecteds[i];
 				cb[i].X = spacing;
 				cb[i].Y = i * 24 + spacing;
-				cb[i].SelectedChanged += new EventHandler(bCheckBoxTicked);
+				cb[i].SelectedChanged += bCheckBoxTicked;
 				AddChild(cb[i]);
 			}
 		}
@@ -165,10 +169,8 @@ namespace CheatSheet.Menus
 				case "Moonlord":
 					NPC.downedMoonlord = checkbox.Selected;
 					break;
-
-				default:
-					break;
 			}
+
 			////((CheatSheet)mod).hotbar.ChangedBossDowner();
 			////BossDowner.bossDownerWindow.selected = true;
 		}

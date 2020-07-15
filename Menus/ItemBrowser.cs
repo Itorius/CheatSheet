@@ -2,10 +2,12 @@ using CheatSheet.CustomUI;
 using CheatSheet.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,7 +35,8 @@ namespace CheatSheet.Menus
 	internal class ItemBrowser : UISlideWindow
 	{
 		internal static string CSText(string key, string category = "ItemBrowser") => CheatSheet.CSText(category, key);
-		private static string[] categNames = new string[]
+
+		private static string[] categNames =
 		{
 			CSText("AllItems"),
 			CSText("Weapons"),
@@ -47,26 +50,8 @@ namespace CheatSheet.Menus
 			CSText("Furniture"),
 			CSText("Pets"),
 			CSText("Mounts"),
-      //      "Crafting Materials",
-            CSText("CycleModSpecificItems"),
-		};
-
-		private static Texture2D[] categoryIcons = new Texture2D[]
-		{
-			Main.itemTexture[ItemID.AlphabetStatueA],
-			Main.itemTexture[ItemID.SilverBroadsword],
-			Main.itemTexture[ItemID.SilverPickaxe],
-			Main.itemTexture[ItemID.SilverChainmail],
-			Main.itemTexture[ItemID.HermesBoots],
-			Main.itemTexture[ItemID.DirtBlock],
-			Main.itemTexture[ItemID.FlamingArrow],
-			Main.itemTexture[ItemID.GreaterHealingPotion],
-			Main.itemTexture[ItemID.WormScarf],
-			Main.itemTexture[ItemID.Dresser],
-			Main.itemTexture[ItemID.ZephyrFish],
-			Main.itemTexture[ItemID.SlimySaddle],
-        //    Main.itemTexture[ItemID.FallenStar],
-            Main.itemTexture[ItemID.AlphabetStatueM],
+			//      "Crafting Materials",
+			CSText("CycleModSpecificItems"),
 		};
 
 		internal ItemView itemView;
@@ -88,41 +73,72 @@ namespace CheatSheet.Menus
 
 		public CheatSheet mod;
 
-		public int lastModNameNumber = 0;
+		public int lastModNameNumber;
 
 		public ItemBrowser(CheatSheet mod)
 		{
+			Main.instance.LoadItem(ItemID.AlphabetStatueA);
+			Main.instance.LoadItem(ItemID.SilverBroadsword);
+			Main.instance.LoadItem(ItemID.SilverPickaxe);
+			Main.instance.LoadItem(ItemID.SilverChainmail);
+			Main.instance.LoadItem(ItemID.HermesBoots);
+			Main.instance.LoadItem(ItemID.DirtBlock);
+			Main.instance.LoadItem(ItemID.FlamingArrow);
+			Main.instance.LoadItem(ItemID.GreaterHealingPotion);
+			Main.instance.LoadItem(ItemID.WormScarf);
+			Main.instance.LoadItem(ItemID.Dresser);
+			Main.instance.LoadItem(ItemID.ZephyrFish);
+			Main.instance.LoadItem(ItemID.SlimySaddle);
+			Main.instance.LoadItem(ItemID.AlphabetStatueM);
+
+			Texture2D[] categoryIcons = {
+				TextureAssets.Item[ItemID.AlphabetStatueA].Value,
+				TextureAssets.Item[ItemID.SilverBroadsword].Value,
+				TextureAssets.Item[ItemID.SilverPickaxe].Value,
+				TextureAssets.Item[ItemID.SilverChainmail].Value,
+				TextureAssets.Item[ItemID.HermesBoots].Value,
+				TextureAssets.Item[ItemID.DirtBlock].Value,
+				TextureAssets.Item[ItemID.FlamingArrow].Value,
+				TextureAssets.Item[ItemID.GreaterHealingPotion].Value,
+				TextureAssets.Item[ItemID.WormScarf].Value,
+				TextureAssets.Item[ItemID.Dresser].Value,
+				TextureAssets.Item[ItemID.ZephyrFish].Value,
+				TextureAssets.Item[ItemID.SlimySaddle].Value,
+				//    TextureAssets.Item[ItemID.FallenStar].Value,
+				TextureAssets.Item[ItemID.AlphabetStatueM].Value,
+			};
+
 			categories.Clear();
 			bCategories = new UIImage[categoryIcons.Length];
-			this.itemView = new ItemView();
+			itemView = new ItemView();
 			this.mod = mod;
-			this.CanMove = true;
-			base.Width = this.itemView.Width + this.spacing * 2f;
-			base.Height = 420f;
-			this.itemView.Position = new Vector2(this.spacing, base.Height - this.spacing - this.itemView.Height);
-			this.AddChild(this.itemView);
-			this.ParseList2();
-			Texture2D texture = mod.GetTexture("UI/closeButton");
-			UIImage uIImage = new UIImage(texture/*UIView.GetEmbeddedTexture("Images.closeButton.png")*/);
+			CanMove = true;
+			Width = itemView.Width + spacing * 2f;
+			Height = 420f;
+			itemView.Position = new Vector2(spacing, Height - spacing - itemView.Height);
+			AddChild(itemView);
+			ParseList2();
+			Texture2D texture = mod.GetTexture("UI/closeButton").Value;
+			UIImage uIImage = new UIImage(texture /*UIView.GetEmbeddedTexture("Images.closeButton.png")*/);
 			uIImage.Anchor = AnchorPosition.TopRight;
-			uIImage.Position = new Vector2(base.Width - this.spacing, this.spacing);
-			uIImage.onLeftClick += new EventHandler(this.bClose_onLeftClick);
-			this.AddChild(uIImage);
-			this.textbox = new UITextbox();
-			this.textbox.Width = 100;
-			this.textbox.Anchor = AnchorPosition.TopRight;
-			this.textbox.Position = new Vector2(base.Width - this.spacing * 2f - uIImage.Width, this.spacing + 40);
+			uIImage.Position = new Vector2(Width - spacing, spacing);
+			uIImage.onLeftClick += bClose_onLeftClick;
+			AddChild(uIImage);
+			textbox = new UITextbox();
+			textbox.Width = 100;
+			textbox.Anchor = AnchorPosition.TopRight;
+			textbox.Position = new Vector2(Width - spacing * 2f - uIImage.Width, spacing + 40);
 			//	this.textbox.Position = new Vector2(base.Width - this.spacing * 2f - uIImage.Width, this.spacing * 2f + uIImage.Height);
-			this.textbox.KeyPressed += new UITextbox.KeyPressedHandler(this.textbox_KeyPressed);
-			this.AddChild(this.textbox);
-			for (int j = 0; j < ItemBrowser.categoryIcons.Length; j++)
+			textbox.KeyPressed += textbox_KeyPressed;
+			AddChild(textbox);
+			for (int j = 0; j < categoryIcons.Length; j++)
 			{
-				UIImage uIImage2 = new UIImage(ItemBrowser.categoryIcons[j]);
-				Vector2 position = new Vector2(this.spacing, this.spacing);
+				UIImage uIImage2 = new UIImage(categoryIcons[j]);
+				Vector2 position = new Vector2(spacing, spacing);
 				uIImage2.Scale = 32f / Math.Max(categoryIcons[j].Width, categoryIcons[j].Height);
 
-				position.X += (float)(j % 12 * 40);
-				position.Y += (float)(j / 12 * 40);
+				position.X += j % 12 * 40;
+				position.Y += j / 12 * 40;
 
 				if (categoryIcons[j].Height > categoryIcons[j].Width)
 				{
@@ -137,19 +153,20 @@ namespace CheatSheet.Menus
 				uIImage2.Tag = j;
 				uIImage2.onLeftClick += (s, e) => buttonClick(s, e, true);
 				uIImage2.onRightClick += (s, e) => buttonClick(s, e, false);
-				uIImage2.ForegroundColor = ItemBrowser.buttonColor;
+				uIImage2.ForegroundColor = buttonColor;
 				if (j == 0)
 				{
-					uIImage2.ForegroundColor = ItemBrowser.buttonSelectedColor;
+					uIImage2.ForegroundColor = buttonSelectedColor;
 				}
-				uIImage2.Tooltip = ItemBrowser.categNames[j];
-				ItemBrowser.bCategories[j] = uIImage2;
-				this.AddChild(uIImage2);
+
+				uIImage2.Tooltip = categNames[j];
+				bCategories[j] = uIImage2;
+				AddChild(uIImage2);
 			}
-			itemView.selectedCategory = ItemBrowser.categories[0].ToArray();
+
+			itemView.selectedCategory = categories[0].ToArray();
 			itemView.activeSlots = itemView.selectedCategory;
 			itemView.ReorderSlots();
-			return;
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
@@ -159,20 +176,22 @@ namespace CheatSheet.Menus
 			if (Visible && IsMouseInside())
 			{
 				Main.LocalPlayer.mouseInterface = true;
-				Main.LocalPlayer.showItemIcon = false;
+				Main.LocalPlayer.cursorItemIconEnabled = false;
 			}
 
-			float x = Main.fontMouseText.MeasureString(UIView.HoverText).X;
-			Vector2 vector = new Vector2((float)Main.mouseX, (float)Main.mouseY) + new Vector2(16f);
-			if (vector.Y > (float)(Main.screenHeight - 30))
+			float x = FontAssets.MouseText.Value.MeasureString(HoverText).X;
+			Vector2 vector = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16f);
+			if (vector.Y > Main.screenHeight - 30)
 			{
-				vector.Y = (float)(Main.screenHeight - 30);
+				vector.Y = Main.screenHeight - 30;
 			}
-			if (vector.X > (float)Main.screenWidth - x)
+
+			if (vector.X > Main.screenWidth - x)
 			{
-				vector.X = (float)(Main.screenWidth - 460);
+				vector.X = Main.screenWidth - 460;
 			}
-			Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
+
+			Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, HoverText, vector.X, vector.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, Vector2.Zero);
 		}
 
 		public override void Update()
@@ -219,6 +238,7 @@ namespace CheatSheet.Menus
 			{
 				//base.Visible = false;
 			}
+
 			base.Update();
 		}
 
@@ -235,72 +255,78 @@ namespace CheatSheet.Menus
 			int num = (int)uIImage.Tag;
 			if (num == (int)ItemBrowserCategories.ModItems)
 			{
-				var mods = ItemBrowser.ModToItems.Keys.ToList();
+				var mods = ModToItems.Keys.ToList();
 				mods.Sort();
-				if (mods.Count == 0) {
+				if (mods.Count == 0)
+				{
 					Main.NewText("No Items have been added by mods.");
 				}
-				else {
-					if(uIImage.ForegroundColor == ItemBrowser.buttonSelectedColor)
-						lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
+				else
+				{
+					if (uIImage.ForegroundColor == buttonSelectedColor) lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
 					string currentMod = mods[lastModNameNumber];
-					this.itemView.selectedCategory = ItemBrowser.categories[0].Where(x => this.itemView.allItemsSlots[x].item.modItem != null && this.itemView.allItemsSlots[x].item.modItem.mod.Name == currentMod).ToArray();
-					this.itemView.activeSlots = this.itemView.selectedCategory;
-					this.itemView.ReorderSlots();
-					bCategories[num].Tooltip = ItemBrowser.categNames[num] + ": " + currentMod;
+					itemView.selectedCategory = categories[0].Where(x => itemView.allItemsSlots[x].item.modItem != null && itemView.allItemsSlots[x].item.modItem.mod.Name == currentMod).ToArray();
+					itemView.activeSlots = itemView.selectedCategory;
+					itemView.ReorderSlots();
+					bCategories[num].Tooltip = categNames[num] + ": " + currentMod;
 				}
 			}
 			else
 			{
-				this.itemView.selectedCategory = ItemBrowser.categories[num].ToArray();
-				this.itemView.activeSlots = this.itemView.selectedCategory;
-				this.itemView.ReorderSlots();
+				itemView.selectedCategory = categories[num].ToArray();
+				itemView.activeSlots = itemView.selectedCategory;
+				itemView.ReorderSlots();
 			}
-			this.textbox.Text = "";
-			UIImage[] array = ItemBrowser.bCategories;
+
+			textbox.Text = "";
+			UIImage[] array = bCategories;
 			for (int j = 0; j < array.Length; j++)
 			{
 				UIImage uIImage2 = array[j];
-				uIImage2.ForegroundColor = ItemBrowser.buttonColor;
+				uIImage2.ForegroundColor = buttonColor;
 			}
-			uIImage.ForegroundColor = ItemBrowser.buttonSelectedColor;
+
+			uIImage.ForegroundColor = buttonSelectedColor;
 		}
 
 		private void textbox_KeyPressed(object sender, char key)
 		{
-			if (this.textbox.Text.Length <= 0)
+			if (textbox.Text.Length <= 0)
 			{
-				this.itemView.activeSlots = this.itemView.selectedCategory;
-				this.itemView.ReorderSlots();
+				itemView.activeSlots = itemView.selectedCategory;
+				itemView.ReorderSlots();
 				return;
 			}
+
 			List<int> list = new List<int>();
-			int[] category = this.itemView.selectedCategory;
+			int[] category = itemView.selectedCategory;
 			for (int i = 0; i < category.Length; i++)
 			{
 				int num = category[i];
-				Slot slot = this.itemView.allItemsSlots[num];
-				if (slot.item.Name.ToLower().IndexOf(this.textbox.Text.ToLower(), StringComparison.Ordinal) != -1)
+				Slot slot = itemView.allItemsSlots[num];
+				if (slot.item.Name.ToLower().IndexOf(textbox.Text.ToLower(), StringComparison.Ordinal) != -1)
 				{
 					list.Add(num);
 				}
 			}
+
 			if (list.Count > 0)
 			{
-				this.itemView.activeSlots = list.ToArray();
-				this.itemView.ReorderSlots();
+				itemView.activeSlots = list.ToArray();
+				itemView.ReorderSlots();
 				return;
 			}
-			this.textbox.Text = this.textbox.Text.Substring(0, this.textbox.Text.Length - 1);
+
+			textbox.Text = textbox.Text.Substring(0, textbox.Text.Length - 1);
 		}
 
 		private void ParseList2()
 		{
 			//ItemBrowser.categoryNames = ItemBrowser.categNames.ToList<string>();
-			for (int i = 0; i < ItemBrowser.categNames.Length; i++)
+			for (int i = 0; i < categNames.Length; i++)
 			{
-				ItemBrowser.categories.Add(new List<int>());
-				for (int j = 0; j < this.itemView.allItemsSlots.Length; j++)
+				categories.Add(new List<int>());
+				for (int j = 0; j < itemView.allItemsSlots.Length; j++)
 				{
 					Item item = itemView.allItemsSlots[j].item;
 					//"Weapons",
@@ -317,58 +343,58 @@ namespace CheatSheet.Menus
 					//"Materials"
 					if (i == 0)
 					{
-						ItemBrowser.categories[i].Add(j);
-						if (j >= ItemID.Count) {
+						categories[i].Add(j);
+						if (j >= ItemID.Count)
+						{
 							string modName = ItemLoader.GetItem(j).mod.Name;
 							List<int> itemInMod;
-							if (!ItemBrowser.ModToItems.TryGetValue(modName, out itemInMod))
-								ItemBrowser.ModToItems.Add(modName, itemInMod = new List<int>());
+							if (!ModToItems.TryGetValue(modName, out itemInMod)) ModToItems.Add(modName, itemInMod = new List<int>());
 							itemInMod.Add(j);
 						}
 					}
 					else if (i == (int)ItemBrowserCategories.Weapons && item.damage > 0)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Tools && (item.pick > 0 || item.axe > 0 || item.hammer > 0))
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Armor && (item.headSlot != -1 || item.bodySlot != -1 || item.legSlot != -1))
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Accessories && item.accessory)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Blocks && (item.createTile != -1 || item.createWall != -1))
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Ammo && item.ammo != 0)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
-					else if (i == (int)ItemBrowserCategories.Potions && (item.UseSound != null && item.UseSound.Style == 3))
+					else if (i == (int)ItemBrowserCategories.Potions && item.UseSound != null && item.UseSound.Style == 3)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Expert && item.expert)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Furniture && item.createTile != -1)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
-					else if (i == (int)ItemBrowserCategories.Pets && (item.buffType > 0 && (Main.vanityPet[item.buffType] || Main.lightPet[item.buffType])))
+					else if (i == (int)ItemBrowserCategories.Pets && item.buffType > 0 && (Main.vanityPet[item.buffType] || Main.lightPet[item.buffType]))
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					else if (i == (int)ItemBrowserCategories.Mounts && item.mountType != -1)
 					{
-						ItemBrowser.categories[i].Add(j);
+						categories[i].Add(j);
 					}
 					//else if (i == (int)ItemBrowserCategories.Materials && (itemView.allItemsSlots[j].item.material || itemView.allItemsSlots[j].item.checkMat()))
 					//{
@@ -412,10 +438,11 @@ namespace CheatSheet.Menus
 					// }
 				}
 			}
-			ItemBrowser.categories[(int)ItemBrowserCategories.Weapons] = ItemBrowser.categories[(int)ItemBrowserCategories.Weapons].OrderBy(x => itemView.allItemsSlots[x].item.damage).ToList();
-			ItemBrowser.categories[(int)ItemBrowserCategories.Tools] = ItemBrowser.categories[(int)ItemBrowserCategories.Tools].OrderBy(x => itemView.allItemsSlots[x].item.pick).ToList();
-			ItemBrowser.categories[(int)ItemBrowserCategories.Accessories] = ItemBrowser.categories[(int)ItemBrowserCategories.Accessories].OrderBy(x => itemView.allItemsSlots[x].item.rare).ToList();
-			this.itemView.selectedCategory = ItemBrowser.categories[0].ToArray();
+
+			categories[(int)ItemBrowserCategories.Weapons] = categories[(int)ItemBrowserCategories.Weapons].OrderBy(x => itemView.allItemsSlots[x].item.damage).ToList();
+			categories[(int)ItemBrowserCategories.Tools] = categories[(int)ItemBrowserCategories.Tools].OrderBy(x => itemView.allItemsSlots[x].item.pick).ToList();
+			categories[(int)ItemBrowserCategories.Accessories] = categories[(int)ItemBrowserCategories.Accessories].OrderBy(x => itemView.allItemsSlots[x].item.rare).ToList();
+			itemView.selectedCategory = categories[0].ToArray();
 		}
 	}
 }

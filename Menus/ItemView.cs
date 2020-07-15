@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria;
+using Terraria.GameContent;
 using Terraria.UI;
 
 namespace CheatSheet.Menus
@@ -23,29 +23,27 @@ namespace CheatSheet.Menus
 
 		private int slotColumns = 10;
 
-		private float slotSize = (float)Slot.backgroundTexture.Width * 0.85f;
+		private float slotSize = Slot.backgroundTexture.Width * 0.85f;
 
 		private int slotRows = 6;
 
 		public int[] selectedCategory
 		{
-			get
-			{
-				return this._selectedCategory;
-			}
+			get { return _selectedCategory; }
 			set
 			{
-				List<int> list = value.ToList<int>();
+				List<int> list = value.ToList();
 				for (int i = 0; i < list.Count; i++)
 				{
-					Slot slot = this.allItemsSlots[list[i]];
+					Slot slot = allItemsSlots[list[i]];
 					if (slot.item.type == 0 || GetTooltipsAsString(slot.item.ToolTip) == "You shouldn't have this")
 					{
 						list.RemoveAt(i);
 						i--;
 					}
 				}
-				this._selectedCategory = list.ToArray();
+
+				_selectedCategory = list.ToArray();
 			}
 		}
 
@@ -56,18 +54,20 @@ namespace CheatSheet.Menus
 			{
 				sb.Append(toolTip.GetLine(j) + "\n");
 			}
+
 			return sb.ToString().ToLower();
 		}
 
 		public ItemView()
 		{
-			base.Width = (this.slotSize + (float)this.slotSpace) * (float)this.slotColumns + (float)this.slotSpace + 20f;
-			base.Height = 300f;
-			this.allItemsSlots = new Slot[Main.itemTexture.Length];
-			for (int i = 0; i < this.allItemsSlots.Length; i++)
+			Width = (slotSize + slotSpace) * slotColumns + slotSpace + 20f;
+			Height = 300f;
+			allItemsSlots = new Slot[TextureAssets.Item.Length];
+			for (int i = 0; i < allItemsSlots.Length; i++)
 			{
-				this.allItemsSlots[i] = new Slot(i);
+				allItemsSlots[i] = new Slot(i);
 			}
+
 			//	this.allItemsSlots = (from s in this.allItemsSlots
 			//						  select s).ToArray<Slot>();
 		}
@@ -79,21 +79,22 @@ namespace CheatSheet.Menus
 
 		public void ReorderSlots()
 		{
-			base.ScrollPosition = 0f;
-			base.ClearContent();
-			for (int i = 0; i < this.activeSlots.Length; i++)
+			ScrollPosition = 0f;
+			ClearContent();
+			for (int i = 0; i < activeSlots.Length; i++)
 			{
 				int num = i;
-				Slot slot = this.allItemsSlots[this.activeSlots[num]];
-				int num2 = i % this.slotColumns;
-				int num3 = i / this.slotColumns;
-				float x = (float)this.slotSpace + (float)num2 * (slot.Width + (float)this.slotSpace);
-				float y = (float)this.slotSpace + (float)num3 * (slot.Height + (float)this.slotSpace);
+				Slot slot = allItemsSlots[activeSlots[num]];
+				int num2 = i % slotColumns;
+				int num3 = i / slotColumns;
+				float x = slotSpace + num2 * (slot.Width + slotSpace);
+				float y = slotSpace + num3 * (slot.Height + slotSpace);
 				slot.Position = new Vector2(x, y);
 				slot.Offset = Vector2.Zero;
-				this.AddChild(slot);
+				AddChild(slot);
 			}
-			base.ContentHeight = base.GetLastChild().Y + base.GetLastChild().Height + this.spacing;
+
+			ContentHeight = GetLastChild().Y + GetLastChild().Height + spacing;
 		}
 	}
 }

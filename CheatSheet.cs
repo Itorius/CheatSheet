@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -33,14 +34,14 @@ namespace CheatSheet
 		internal Hotbar hotbar;
 		internal ItemBrowser itemBrowser;
 		internal NPCBrowser npcBrowser;
-		internal RecipeBrowserWindow recipeBrowser;
-		internal ExtendedCheatMenu extendedCheatMenu;
-		internal PaintToolsHotbar paintToolsHotbar;
-		internal PaintToolsUI paintToolsUI;
-		internal QuickTeleportHotbar quickTeleportHotbar;
-		internal QuickClearHotbar quickClearHotbar;
-		internal NPCButchererHotbar npcButchererHotbar;
-		internal EventManagerHotbar eventManagerHotbar;
+		// internal RecipeBrowserWindow recipeBrowser;
+		// internal ExtendedCheatMenu extendedCheatMenu;
+		// internal PaintToolsHotbar paintToolsHotbar;
+		// internal PaintToolsUI paintToolsUI;
+		// internal QuickTeleportHotbar quickTeleportHotbar;
+		// internal QuickClearHotbar quickClearHotbar;
+		// internal NPCButchererHotbar npcButchererHotbar;
+		// internal EventManagerHotbar eventManagerHotbar;
 
 		internal Dictionary<string, bool> herosPermissions = new Dictionary<string, bool>();
 		internal const string ModifySpawnRateMultiplier_Permission = "ModifySpawnRateMultiplier";
@@ -113,7 +114,7 @@ namespace CheatSheet
 			ButtonTexture.Clear();
 			ButtonTooltip.Clear();
 
-			PaintToolsSlot.CurrentSelect = null;
+			// PaintToolsSlot.CurrentSelect = null;
 			AllItemsMenu.singleSlotArray = null;
 			UI.UICheckbox.checkboxTexture = null;
 			UI.UICheckbox.checkmarkTexture = null;
@@ -131,7 +132,7 @@ namespace CheatSheet
 				itemBrowser.itemView = null;
 			itemBrowser = null;
 			npcBrowser = null;
-			recipeBrowser = null;
+			// recipeBrowser = null;
 			if (hotbar != null)
 			{
 				hotbar.buttonView?.RemoveAllChildren();
@@ -142,15 +143,15 @@ namespace CheatSheet
 			ToggleCheatSheetHotbarHotKey = null;
 			RecipeBrowserWindow.recipeView = null;
 			RecipeBrowserWindow.lookupItemSlot = null;
-			ConfigurationTool.cheatSheet = null;
-			ConfigurationTool.configurationWindow = null;
+			// ConfigurationTool.cheatSheet = null;
+			// ConfigurationTool.configurationWindow = null;
 			Hotbar.loginTexture = null;
 			Hotbar.logoutTexture = null;
-			ConfigurationTool.button = null;
-			SpawnRateMultiplier.button = null;
-			MinionSlotBooster.button = null;
-			LightHack.button = null;
-			GodMode.button = null;
+			// ConfigurationTool.button = null;
+			// SpawnRateMultiplier.button = null;
+			// MinionSlotBooster.button = null;
+			// LightHack.button = null;
+			// GodMode.button = null;
 		}
 
 		internal static string CSText(string category, string key)
@@ -232,20 +233,20 @@ namespace CheatSheet
 			// Add Buttons only to non-servers (otherwise the server will crash, since textures aren't loaded on servers)
 			if (!Main.dedServ)
 			{
-				herosMod.Call(
-					// Special string
-					"AddSimpleButton",
-					// Name of Permission governing the availability of the button/tool
-					ModifySpawnRateMultiplier_Permission,
-					// Texture of the button. 38x38 is recommended for HERO's Mod. Also, a white outline on the icon similar to the other icons will look good.
-					Main.itemTexture[ItemID.WaterCandle],
-					// A method that will be called when the button is clicked
-					(Action)SpawnRateMultiplier.HEROsButtonPressed,
-					// A method that will be called when the player's permissions have changed
-					(Action<bool>)SpawnRateMultiplier.HEROsPermissionChanged,
-					// A method that will be called when the button is hovered, returning the Tooltip
-					(Func<string>)SpawnRateMultiplier.HEROsTooltip
-				);
+				// herosMod.Call(
+				// 	// Special string
+				// 	"AddSimpleButton",
+				// 	// Name of Permission governing the availability of the button/tool
+				// 	ModifySpawnRateMultiplier_Permission,
+				// 	// Texture of the button. 38x38 is recommended for HERO's Mod. Also, a white outline on the icon similar to the other icons will look good.
+				// 	TextureAssets.Item[ItemID.WaterCandle],
+				// 	// A method that will be called when the button is clicked
+				// 	(Action)SpawnRateMultiplier.HEROsButtonPressed,
+				// 	// A method that will be called when the player's permissions have changed
+				// 	(Action<bool>)SpawnRateMultiplier.HEROsPermissionChanged,
+				// 	// A method that will be called when the button is hovered, returning the Tooltip
+				// 	(Func<string>)SpawnRateMultiplier.HEROsTooltip
+				// );
 			}
 
 			// Other non-tutorial permissions.
@@ -286,34 +287,34 @@ namespace CheatSheet
 					npcBrowser.SetDefaultPosition(new Vector2(30, 180));
 					npcBrowser.Visible = false;
 
-					recipeBrowser = new RecipeBrowserWindow(this);
-					recipeBrowser.SetDefaultPosition(new Vector2(30, 180));
-					recipeBrowser.Visible = false;
+					// recipeBrowser = new RecipeBrowserWindow(this);
+					// recipeBrowser.SetDefaultPosition(new Vector2(30, 180));
+					// recipeBrowser.Visible = false;
 
-					extendedCheatMenu = new ExtendedCheatMenu(this);
-					extendedCheatMenu.SetDefaultPosition(new Vector2(120, 180));
-					extendedCheatMenu.Visible = false;
+					// extendedCheatMenu = new ExtendedCheatMenu(this);
+					// extendedCheatMenu.SetDefaultPosition(new Vector2(120, 180));
+					// extendedCheatMenu.Visible = false;
 
-					paintToolsHotbar = new PaintToolsHotbar(this);
-					//	paintToolsHotbar.SetDefaultPosition(new Microsoft.Xna.Framework.Vector2(120, 180));
-					paintToolsHotbar.Visible = false;
-					paintToolsHotbar.Hide();
+					// paintToolsHotbar = new PaintToolsHotbar(this);
+						// paintToolsHotbar.SetDefaultPosition(new Microsoft.Xna.Framework.Vector2(120, 180));
+					// paintToolsHotbar.Visible = false;
+					// paintToolsHotbar.Hide();
 
-					paintToolsUI = new PaintToolsUI(this);
-					paintToolsUI.SetDefaultPosition(new Vector2(30, 180));
-					paintToolsUI.Visible = false;
+					// paintToolsUI = new PaintToolsUI(this);
+					// paintToolsUI.SetDefaultPosition(new Vector2(30, 180));
+					// paintToolsUI.Visible = false;
 
-					quickTeleportHotbar = new QuickTeleportHotbar(this);
-					quickTeleportHotbar.Visible = false;
-					quickTeleportHotbar.Hide();
+					// quickTeleportHotbar = new QuickTeleportHotbar(this);
+					// quickTeleportHotbar.Visible = false;
+					// quickTeleportHotbar.Hide();
 
-					quickClearHotbar = new QuickClearHotbar(this);
-					quickClearHotbar.Visible = false;
-					quickClearHotbar.Hide();
+					// quickClearHotbar = new QuickClearHotbar(this);
+					// quickClearHotbar.Visible = false;
+					// quickClearHotbar.Hide();
 
-					npcButchererHotbar = new NPCButchererHotbar(this);
-					npcButchererHotbar.Visible = false;
-					npcButchererHotbar.Hide();
+					// npcButchererHotbar = new NPCButchererHotbar(this);
+					// npcButchererHotbar.Visible = false;
+					// npcButchererHotbar.Hide();
 
 					//eventManagerHotbar = new EventManagerHotbar(this);
 					//eventManagerHotbar.Visible = false;
@@ -344,32 +345,32 @@ namespace CheatSheet
 			if (Main.netMode == 1 && ModContent.GetInstance<CheatSheetServerConfig>().DisableCheatsForNonHostUsers && !IsPlayerLocalServerOwner(Main.LocalPlayer))
 				return;
 
-			if (PaintToolsEx.schematicsToLoad != null && numberOnlineToLoad > 0 && CheatSheet.instance.paintToolsUI.view.childrenToRemove.Count == 0)
-			{
-				PaintToolsEx.LoadSingleSchematic();
+			// if (PaintToolsEx.schematicsToLoad != null && numberOnlineToLoad > 0 && CheatSheet.instance.paintToolsUI.view.childrenToRemove.Count == 0)
+			// {
+				// PaintToolsEx.LoadSingleSchematic();
 				//CheatSheet.instance.paintToolsUI.view.ReorderSlots();
-			}
+			// }
 
-			if (PaintToolsSlot.updateNeeded)
-			{
-				bool oneUpdated = false;
-				foreach (var item in paintToolsUI.view.slotList)
-				{
-					if (item.texture == Main.magicPixel)
-					{
-						item.texture = item.MakeThumbnail(item.stampInfo);
-						oneUpdated = true;
-						break;
-					}
-				}
-				if (!oneUpdated)
-					PaintToolsSlot.updateNeeded = false;
-			}
+			// if (PaintToolsSlot.updateNeeded)
+			// {
+				// bool oneUpdated = false;
+				// foreach (var item in paintToolsUI.view.slotList)
+				// {
+					// if (item.texture == TextureAssets.MagicPixel.Value)
+					// {
+						// item.texture = item.MakeThumbnail(item.stampInfo);
+						// oneUpdated = true;
+						// break;
+					// }
+				// }
+				// if (!oneUpdated)
+					// PaintToolsSlot.updateNeeded = false;
+			// }
 		}
 
 		//public override void PostDrawFullscreenMap(ref string mouseText)
 		//{
-		//	Main.spriteBatch.DrawString(Main.fontMouseText, "Testing Testing", new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), Color.Pink, 0.0f, new Vector2(), 0.8f, SpriteEffects.None, 0.0f);
+		//	Main.spriteBatch.DrawString(FontAssets.MouseText.Value, "Testing Testing", new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), Color.Pink, 0.0f, new Vector2(), 0.8f, SpriteEffects.None, 0.0f);
 		//}
 
 		private int lastmode = -1;
@@ -384,7 +385,7 @@ namespace CheatSheet
 				lastmode = Main.netMode;
 				if (Main.netMode == 0)
 				{
-					SpawnRateMultiplier.HasPermission = true;
+					// SpawnRateMultiplier.HasPermission = true;
 					foreach (var key in herosPermissions.Keys.ToList()) {
 						herosPermissions[key] = true;
 					}
@@ -443,7 +444,7 @@ namespace CheatSheet
 
 		//public override void PostDrawInterface(SpriteBatch spriteBatch)
 		//{
-		//	//Main.spriteBatch.DrawString(Main.fontMouseText, "Drawn Always", new Vector2(Main.screenWidth/2, Main.screenHeight/2 + 20), Color.Aquamarine, 0.0f, new Vector2(), 0.8f, SpriteEffects.None, 0.0f);
+		//	//Main.spriteBatch.DrawString(FontAssets.MouseText.Value, "Drawn Always", new Vector2(Main.screenWidth/2, Main.screenHeight/2 + 20), Color.Aquamarine, 0.0f, new Vector2(), 0.8f, SpriteEffects.None, 0.0f);
 		//	AllItemsMenu menu = (AllItemsMenu)this.GetGlobalItem("AllItemsMenu");
 		//	menu.DrawUpdateAll(spriteBatch);
 		//}
@@ -502,7 +503,7 @@ namespace CheatSheet
 			return null;
 		}
 
-		public override void HandlePacket(BinaryReader reader, int whoAmI)
+		/*public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			CheatSheetMessageType msgType = (CheatSheetMessageType)reader.ReadByte();
 			string key;
@@ -514,7 +515,7 @@ namespace CheatSheet
 					int netID = reader.ReadInt32();
 					NPCSlot.HandleNPC(npcType, netID, true, whoAmI);
 					key = "Mods.CheatSheet.MobBrowser.SpawnNPCNotification";
-					NetMessage.BroadcastChatMessage(NetworkText.FromKey(key, netID, Netplay.Clients[whoAmI].Name), Color.Azure);
+					// NetMessage.BroadcastChatMessage(NetworkText.FromKey(key, netID, Netplay.Clients[whoAmI].Name), Color.Azure);
 					//message = "Spawned " + netID + " by " + Netplay.Clients[whoAmI].Name;
 					//NetMessage.SendData(25, -1, -1, message, 255, Color.Azure.R, Color.Azure.G, Color.Azure.B, 0);
 					break;
@@ -597,7 +598,7 @@ namespace CheatSheet
 					Logger.Warn("Unknown Message type: " + msgType);
 					break;
 			}
-		}
+		}*/
 
 		public static Rectangle GetClippingRectangle(SpriteBatch spriteBatch, Rectangle r)
 		{

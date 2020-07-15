@@ -67,7 +67,7 @@
 
 //		public static UIImage GetButton(Mod mod)
 //		{
-//			button = new UIImage(Main.buffTexture[BuffID.MagicLantern]);
+//			button = new UIImage(TextureAssets.Buff[BuffID.MagicLantern]);
 //			button.Tooltip = "Fullbright: Off";
 //			button.onLeftClick += (s, e) =>
 //			{
@@ -93,3 +93,4 @@
 //		}
 //	}
 //}
+

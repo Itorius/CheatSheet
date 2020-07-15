@@ -21,19 +21,16 @@ namespace CheatSheet.Menus
 
 		private int slotColumns = 8;
 
-		private float slotSize = (float)Slot.backgroundTexture.Width * 0.85f;
+		private float slotSize = Slot.backgroundTexture.Width * 0.85f;
 
 		private int slotRows = 6;
 
 		public int[] selectedCategory
 		{
-			get
-			{
-				return this._selectedCategory;
-			}
+			get { return _selectedCategory; }
 			set
 			{
-				List<int> list = value.ToList<int>();
+				List<int> list = value.ToList();
 				for (int i = 0; i < list.Count; i++)
 				{
 					//NPCSlot slot = this.allNPCSlot[list[i]];
@@ -43,19 +40,21 @@ namespace CheatSheet.Menus
 					//	i--;
 					//}
 				}
-				this._selectedCategory = list.ToArray();
+
+				_selectedCategory = list.ToArray();
 			}
 		}
 
 		public RecipeView()
 		{
-			base.Width = (this.slotSize + (float)this.slotSpace) * (float)this.slotColumns + (float)this.slotSpace + 20f;
-			base.Height = 200f;
-			this.allRecipeSlot = new RecipeSlot[Recipe.numRecipes];
-			for (int i = 0; i < this.allRecipeSlot.Length; i++)
+			Width = (slotSize + slotSpace) * slotColumns + slotSpace + 20f;
+			Height = 200f;
+			allRecipeSlot = new RecipeSlot[Recipe.numRecipes];
+			for (int i = 0; i < allRecipeSlot.Length; i++)
 			{
-				this.allRecipeSlot[i] = new RecipeSlot(i);
+				allRecipeSlot[i] = new RecipeSlot(i);
 			}
+
 			//	this.allNPCSlot = (from s in this.allNPCSlot
 			//					   select s).ToArray<NPCSlot>();
 		}
@@ -81,15 +80,16 @@ namespace CheatSheet.Menus
 					}
 				}
 			}
+
 			foreach (var item in groups)
 			{
 				Main.NewText("Group " + item);
 			}
 
-			base.ScrollPosition = 0f;
-			base.ClearContent();
+			ScrollPosition = 0f;
+			ClearContent();
 			int slotNum = 0;
-			for (int i = 0; i < this.activeSlots.Length; i++)
+			for (int i = 0; i < activeSlots.Length; i++)
 			{
 				if (type != 0)
 				{
@@ -117,18 +117,20 @@ namespace CheatSheet.Menus
 						}
 					}
 				}
+
 				//int num = i;
-				RecipeSlot slot = this.allRecipeSlot[this.activeSlots[i]];
-				int num2 = slotNum % this.slotColumns;
-				int num3 = slotNum / this.slotColumns;
-				float x = (float)this.slotSpace + (float)num2 * (slot.Width + (float)this.slotSpace);
-				float y = (float)this.slotSpace + (float)num3 * (slot.Height + (float)this.slotSpace);
+				RecipeSlot slot = allRecipeSlot[activeSlots[i]];
+				int num2 = slotNum % slotColumns;
+				int num3 = slotNum / slotColumns;
+				float x = slotSpace + num2 * (slot.Width + slotSpace);
+				float y = slotSpace + num3 * (slot.Height + slotSpace);
 				slot.Position = new Vector2(x, y);
 				slot.Offset = Vector2.Zero;
-				this.AddChild(slot);
+				AddChild(slot);
 				slotNum++;
 			}
-			base.ContentHeight = base.GetLastChild().Y + base.GetLastChild().Height + this.spacing;
+
+			ContentHeight = GetLastChild().Y + GetLastChild().Height + spacing;
 		}
 	}
 }

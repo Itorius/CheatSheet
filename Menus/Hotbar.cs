@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -49,18 +50,19 @@ namespace CheatSheet.Menus
 		//		public UIImage bTime;
 		public UIImage bToggleNPCBrowser;
 
-		public UIImage bTogglePaintTools;
+		// public UIImage bTogglePaintTools;
 		//		public UIImage bWeatherWindow;
 		//		public UIImage bBackupWorld;
 		//		public UIImage bCTFSettings;
 		//		public UIImage bLogin;
 
-		public UIImage bToggleRecipeBrowser;
-		public UIImage bToggleExtendedCheat;
+		// public UIImage bToggleRecipeBrowser;
+		// public UIImage bToggleExtendedCheat;
 		public UIImage bCycleExtraAccessorySlots;
 		public UIImage bVacuum;
 		public UIImage bToggleNPCButcherer;
-		public UIImage bToggleQuickTeleport;
+
+		// public UIImage bToggleQuickTeleport;
 		// public UIImage bSpawnRateMultiplier;
 		//public UIImage bToggleEventManager;
 
@@ -79,34 +81,29 @@ namespace CheatSheet.Menus
 		{
 			get
 			{
-				if (base.Visible)
+				if (Visible)
 				{
-					return new Vector2(0f, base.Position.Y - (float)Main.screenHeight - this.arrow.Height);
+					return new Vector2(0f, Position.Y - Main.screenHeight - arrow.Height);
 				}
+
 				return Vector2.Zero;
 			}
 		}
 
 		public float shownPosition
 		{
-			get
-			{
-				return (float)Main.screenHeight - base.Height - 12f;
-			}
+			get { return Main.screenHeight - Height - 12f; }
 		}
 
 		public float hiddenPosition
 		{
-			get
-			{
-				return (float)Main.screenHeight;
-			}
+			get { return Main.screenHeight; }
 		}
 
 		public Hotbar(CheatSheet mod)
 		{
 			this.mod = mod;
-			this.buttonView = new UIView();
+			buttonView = new UIView();
 			//	this.timeWindow = new TimeControlWindow();
 			//	this.npcSpawnWindow = new NPCSpawnerWindow();
 			//	this.weatherWindow = new WeatherControlWindow();
@@ -116,20 +113,20 @@ namespace CheatSheet.Menus
 			//	this.AddChild(this.timeWindow);
 			//	this.AddChild(this.npcSpawnWindow);
 			//	this.AddChild(this.weatherWindow);
-			Hotbar.loginTexture = mod.GetTexture("UI/Images.login");// UIView.GetEmbeddedTexture("Images.login.png");
-			Hotbar.logoutTexture = mod.GetTexture("UI/Images.logout"); //UIView.GetEmbeddedTexture("Images.logout.png");
-																	   //	this.bLogin = new UIImage(Hotbar.loginTexture);
-																	   //		bLogin = new UIImage(mod.GetTexture("UI/Images.login"));
-			base.Visible = false;
-			base.UpdateWhenOutOfBounds = true;
+			loginTexture = mod.GetTexture("UI/Images.login").Value; // UIView.GetEmbeddedTexture("Images.login.png");
+			logoutTexture = mod.GetTexture("UI/Images.logout").Value; //UIView.GetEmbeddedTexture("Images.logout.png");
+			//	this.bLogin = new UIImage(Hotbar.loginTexture);
+			//		bLogin = new UIImage(mod.GetTexture("UI/Images.login"));
+			Visible = false;
+			UpdateWhenOutOfBounds = true;
 			//	Hotbar.groupWindow = new GroupManagementWindow();
-			this.button = new UIImage(mod.GetTexture("UI/Images.CollapseBar.CollapseButtonHorizontal"));//new UIImage(UIView.GetEmbeddedTexture("Images.CollapseBar.CollapseButtonHorizontal.png"));
-			this.button.UpdateWhenOutOfBounds = true;
-			this.arrow = new UIImage(mod.GetTexture("UI/Images.CollapseBar.CollapseArrowHorizontal"));  //new UIImage(UIView.GetEmbeddedTexture("Images.CollapseBar.CollapseArrowHorizontal.png"));
+			button = new UIImage(mod.GetTexture("UI/Images.CollapseBar.CollapseButtonHorizontal").Value); //new UIImage(UIView.GetEmbeddedTexture("Images.CollapseBar.CollapseButtonHorizontal.png"));
+			button.UpdateWhenOutOfBounds = true;
+			arrow = new UIImage(mod.GetTexture("UI/Images.CollapseBar.CollapseArrowHorizontal").Value); //new UIImage(UIView.GetEmbeddedTexture("Images.CollapseBar.CollapseArrowHorizontal.png"));
 
 			//		bToggleEnemies = new UIImage(mod.GetTexture("UI/Images.npcIcon"));
-			//		bToggleBlockReach = new UIImage(Main.itemTexture[407]);
-			//		bFlyCamera = new UIImage(Main.itemTexture[493]);
+			//		bToggleBlockReach = new UIImage(TextureAssets.Item[407]);
+			//		bFlyCamera = new UIImage(TextureAssets.Item[493]);
 			//		bRevealMap = new UIImage(mod.GetTexture("UI/Images.canIcon"));// Hotbar.mapTexture);
 			//		bWaypoints = new UIImage(mod.GetTexture("UI/Images.waypointIcon"));
 			//		bGroupManager = new UIImage(mod.GetTexture("UI/Images.manageGroups"));
@@ -141,29 +138,34 @@ namespace CheatSheet.Menus
 
 			//	Main.instance.LoadNPC(NPCID.KingSlime);
 
-			bToggleItemBrowser = new UIImage(Main.itemTexture[ItemID.WorkBench]);
-			bToggleNPCBrowser = new UIImage(mod.GetTexture("UI/Images.npcIcon"));
-			bToggleClearMenu = new UIImage(Main.itemTexture[ItemID.TrashCan]);
-			bToggleRecipeBrowser = new UIImage(Main.itemTexture[ItemID.CookingPot]);
-			bToggleExtendedCheat = new UIImage(Main.itemTexture[ItemID.CellPhone]);
-			bTogglePaintTools = new UIImage(Main.itemTexture[ItemID.Paintbrush]);
-			bCycleExtraAccessorySlots = new UIImage(Main.itemTexture[ItemID.DemonHeart]);
-			bVacuum = new UIImage(mod.GetTexture("UI/Images.bVacuum"));
-			bToggleNPCButcherer = new UIImage(Main.itemTexture[ItemID.Skull]);
-			bToggleQuickTeleport = new UIImage(Main.itemTexture[ItemID.WoodenDoor]);
-			//bToggleEventManager = new UIImage(Main.itemTexture[ItemID.PirateMap]);
+			Main.instance.LoadItem(ItemID.WorkBench);
+			Main.instance.LoadItem(ItemID.TrashCan);
+			Main.instance.LoadItem(ItemID.DemonHeart);
+			Main.instance.LoadItem(ItemID.Skull);
+			
+			bToggleItemBrowser = new UIImage(TextureAssets.Item[ItemID.WorkBench].Value);
+			bToggleNPCBrowser = new UIImage(mod.GetTexture("UI/Images.npcIcon").Value);
+			bToggleClearMenu = new UIImage(TextureAssets.Item[ItemID.TrashCan].Value);
+			// bToggleRecipeBrowser = new UIImage(TextureAssets.Item[ItemID.CookingPot].Value);
+			// bToggleExtendedCheat = new UIImage(TextureAssets.Item[ItemID.CellPhone].Value);
+			// bTogglePaintTools = new UIImage(TextureAssets.Item[ItemID.Paintbrush].Value);
+			bCycleExtraAccessorySlots = new UIImage(TextureAssets.Item[ItemID.DemonHeart].Value);
+			bVacuum = new UIImage(mod.GetTexture("UI/Images.bVacuum").Value);
+			bToggleNPCButcherer = new UIImage(TextureAssets.Item[ItemID.Skull].Value);
+			// bToggleQuickTeleport = new UIImage(TextureAssets.Item[ItemID.WoodenDoor].Value);
+			//bToggleEventManager = new UIImage(TextureAssets.Item[ItemID.PirateMap]);
 
-			this.arrow.UpdateWhenOutOfBounds = true;
-			this.button.Anchor = AnchorPosition.Top;
-			this.arrow.Anchor = AnchorPosition.Top;
-			this.arrow.SpriteEffect = SpriteEffects.FlipVertically;
-			this.AddChild(this.button);
-			this.AddChild(this.arrow);
-			this.button.Position = new Vector2(0f, -this.button.Height);
-			this.button.CenterXAxisToParentCenter();
+			arrow.UpdateWhenOutOfBounds = true;
+			button.Anchor = AnchorPosition.Top;
+			arrow.Anchor = AnchorPosition.Top;
+			arrow.SpriteEffect = SpriteEffects.FlipVertically;
+			AddChild(button);
+			AddChild(arrow);
+			button.Position = new Vector2(0f, -button.Height);
+			button.CenterXAxisToParentCenter();
 			//Do i need this?		this.button.X -= 40;
-			this.arrow.Position = this.button.Position;
-			this.arrow.onLeftClick += new EventHandler(this.button_onLeftClick);
+			arrow.Position = button.Position;
+			arrow.onLeftClick += button_onLeftClick;
 			//		this.bBackupWorld.onLeftClick += new EventHandler(this.bBackupWorld_onLeftClick);
 			//		this.bToggleBlockReach.Tooltip = "Toggle Block Reach";
 			//		this.bToggleEnemies.Tooltip = "Toggle Enemy Spawns";
@@ -177,16 +179,16 @@ namespace CheatSheet.Menus
 			//		this.bLogin.Tooltip = "Login";
 			//		this.bCTFSettings.Tooltip = "Capture the Flag Settings";
 			//		this.bBackupWorld.Tooltip = "Backup World";
-			this.bToggleItemBrowser.Tooltip = CSText("ShowItemBrowser");
-			this.bToggleClearMenu.Tooltip = CSText("ShowClearMenu");
-			this.bToggleNPCBrowser.Tooltip = CSText("ShowNPCBrowser");
-			bToggleRecipeBrowser.Tooltip = CSText("ShowRecipeBrowser");
-			bToggleExtendedCheat.Tooltip = CSText("ShowModExtensionCheats");
-			bTogglePaintTools.Tooltip = CSText("ShowPaintTools");
+			bToggleItemBrowser.Tooltip = CSText("ShowItemBrowser");
+			bToggleClearMenu.Tooltip = CSText("ShowClearMenu");
+			bToggleNPCBrowser.Tooltip = CSText("ShowNPCBrowser");
+			// bToggleRecipeBrowser.Tooltip = CSText("ShowRecipeBrowser");
+			// bToggleExtendedCheat.Tooltip = CSText("ShowModExtensionCheats");
+			// bTogglePaintTools.Tooltip = CSText("ShowPaintTools");
 			bCycleExtraAccessorySlots.Tooltip = CSText("ExtraAccessorySlots") + ": ?";
 			bVacuum.Tooltip = CSText("VacuumItems");
 			bToggleNPCButcherer.Tooltip = CSText("ShowNPCButcherer");
-			bToggleQuickTeleport.Tooltip = CSText("ShowQuickWaypoints");
+			// bToggleQuickTeleport.Tooltip = CSText("ShowQuickWaypoints");
 			//		bToggleEventManager.Tooltip = "Show Event Manager";
 
 			//		this.bToggleBlockReach.Opacity = Hotbar.disabledOpacity;
@@ -203,40 +205,34 @@ namespace CheatSheet.Menus
 			//		this.bLogin.onLeftClick += new EventHandler(this.bLogin_onLeftClick);
 			//		this.bTime.onLeftClick += new EventHandler(this.bTime_onLeftClick);
 			//		this.bWeatherWindow.onLeftClick += new EventHandler(this.bWeatherWindow_onLeftClick);
-			this.bToggleItemBrowser.onLeftClick += new EventHandler(this.bToggleItemBrowser_onLeftClick);
-			this.bToggleClearMenu.onLeftClick += new EventHandler(this.bClearItems_onLeftClick);
-			this.bToggleClearMenu.onRightClick += (s, e) =>
-			{
-				QuickClearHotbar.HandleQuickClear();
-			};
-			this.bToggleNPCBrowser.onLeftClick += new EventHandler(this.bToggleNPCBrowser_onLeftClick);
-			this.bToggleRecipeBrowser.onLeftClick += new EventHandler(this.bToggleRecipeBrowser_onLeftClick);
-			this.bToggleExtendedCheat.onLeftClick += new EventHandler(this.bToggleExtendedCheat_onLeftClick);
-			this.bTogglePaintTools.onLeftClick += new EventHandler(this.bTogglePaintTools_onLeftClick);
-			this.bCycleExtraAccessorySlots.onLeftClick += (s, e) =>
+			bToggleItemBrowser.onLeftClick += bToggleItemBrowser_onLeftClick;
+			bToggleClearMenu.onLeftClick += bClearItems_onLeftClick;
+			bToggleClearMenu.onRightClick += (s, e) => { QuickClearHotbar.HandleQuickClear(); };
+			bToggleNPCBrowser.onLeftClick += bToggleNPCBrowser_onLeftClick;
+			// bToggleRecipeBrowser.onLeftClick += bToggleRecipeBrowser_onLeftClick;
+			// bToggleExtendedCheat.onLeftClick += bToggleExtendedCheat_onLeftClick;
+			// bTogglePaintTools.onLeftClick += bTogglePaintTools_onLeftClick;
+			bCycleExtraAccessorySlots.onLeftClick += (s, e) =>
 			{
 				CheatSheetPlayer cheatSheetPlayer = Main.LocalPlayer.GetModPlayer<CheatSheetPlayer>();
 				cheatSheetPlayer.numberExtraAccessoriesEnabled = (cheatSheetPlayer.numberExtraAccessoriesEnabled + 1) % (CheatSheetPlayer.MaxExtraAccessories + 1);
 				bCycleExtraAccessorySlots.Tooltip = CSText("ExtraAccessorySlots") + ": " + cheatSheetPlayer.numberExtraAccessoriesEnabled;
 			};
-			this.bCycleExtraAccessorySlots.onRightClick += (s, e) =>
+			bCycleExtraAccessorySlots.onRightClick += (s, e) =>
 			{
 				CheatSheetPlayer cheatSheetPlayer = Main.LocalPlayer.GetModPlayer<CheatSheetPlayer>();
 				cheatSheetPlayer.numberExtraAccessoriesEnabled = cheatSheetPlayer.numberExtraAccessoriesEnabled == 0 ? 0 : (cheatSheetPlayer.numberExtraAccessoriesEnabled - 1) % (CheatSheetPlayer.MaxExtraAccessories + 1);
 				bCycleExtraAccessorySlots.Tooltip = CSText("ExtraAccessorySlots") + ": " + cheatSheetPlayer.numberExtraAccessoriesEnabled;
 			};
-			this.bVacuum.onLeftClick += new EventHandler(this.bVacuum_onLeftClick);
-			this.bToggleNPCButcherer.onLeftClick += new EventHandler(this.bButcher_onLeftClick);
-			this.bToggleNPCButcherer.onRightClick += (s, e) =>
-			{
-				NPCButchererHotbar.HandleButcher();
-			};
-			this.bToggleQuickTeleport.onLeftClick += new EventHandler(this.bToggleQuickTeleport_onLeftClick);
-			this.bToggleQuickTeleport.onRightClick += (s, e) =>
-			{
+			bVacuum.onLeftClick += bVacuum_onLeftClick;
+			// bToggleNPCButcherer.onLeftClick += bButcher_onLeftClick;
+			// bToggleNPCButcherer.onRightClick += (s, e) => { NPCButchererHotbar.HandleButcher(); };
+			// bToggleQuickTeleport.onLeftClick += bToggleQuickTeleport_onLeftClick;
+			// bToggleQuickTeleport.onRightClick += (s, e) =>
+			// {
 				//QuickTeleportHotbar.TeleportPlayer(Main.LocalPlayer, new Vector2(Main.spawnTileX, Main.spawnTileY), true);
-				QuickTeleportHotbar.HandleTeleport();
-			};
+				// QuickTeleportHotbar.HandleTeleport();
+			// };
 			//		this.bToggleEventManager.onLeftClick += new EventHandler(this.bToggleEventManager_onLeftClick);
 
 			//		this.buttonView.AddChild(this.bToggleBlockReach);
@@ -254,85 +250,86 @@ namespace CheatSheet.Menus
 
 			buttonView.AddChild(bToggleItemBrowser);
 			buttonView.AddChild(bToggleNPCBrowser);
-			buttonView.AddChild(bToggleRecipeBrowser);
-			buttonView.AddChild(bToggleExtendedCheat);
+			// buttonView.AddChild(bToggleRecipeBrowser);
+			// buttonView.AddChild(bToggleExtendedCheat);
 			buttonView.AddChild(bToggleClearMenu);
-			buttonView.AddChild(bTogglePaintTools);
+			// buttonView.AddChild(bTogglePaintTools);
 			buttonView.AddChild(bCycleExtraAccessorySlots);
 			buttonView.AddChild(bVacuum);
 			buttonView.AddChild(bToggleNPCButcherer);
-			buttonView.AddChild(bToggleQuickTeleport);
+			// buttonView.AddChild(bToggleQuickTeleport);
 			//			buttonView.AddChild(bToggleEventManager);
-			buttonView.AddChild(SpawnRateMultiplier.GetButton(mod));
-			buttonView.AddChild(MinionSlotBooster.GetButton(mod));
-			buttonView.AddChild(LightHack.GetButton(mod));
-			buttonView.AddChild(GodMode.GetButton(mod));
+			// buttonView.AddChild(SpawnRateMultiplier.GetButton(mod));
+			// buttonView.AddChild(MinionSlotBooster.GetButton(mod));
+			// buttonView.AddChild(LightHack.GetButton(mod));
+			// buttonView.AddChild(GodMode.GetButton(mod));
 			//	buttonView.AddChild(FullBright.GetButton(mod));
 			//			buttonView.AddChild(BossDowner.GetButton(mod));
-			buttonView.AddChild(ConfigurationTool.GetButton(mod));
+			// buttonView.AddChild(ConfigurationTool.GetButton(mod));
 
-			base.Width = 200f;
-			base.Height = 55f;
-			this.buttonView.Height = base.Height;
-			base.Anchor = AnchorPosition.Top;
-			this.AddChild(this.buttonView);
-			base.Position = new Vector2(Hotbar.xPosition, this.hiddenPosition);
-			base.CenterXAxisToParentCenter();
-			float num = this.spacing;
-			for (int i = 0; i < this.buttonView.children.Count; i++)
+			Width = 200f;
+			Height = 55f;
+			buttonView.Height = Height;
+			Anchor = AnchorPosition.Top;
+			AddChild(buttonView);
+			Position = new Vector2(xPosition, hiddenPosition);
+			CenterXAxisToParentCenter();
+			float num = spacing;
+			for (int i = 0; i < buttonView.children.Count; i++)
 			{
-				this.buttonView.children[i].Anchor = AnchorPosition.Left;
-				this.buttonView.children[i].Position = new Vector2(num, 0f);
-				this.buttonView.children[i].CenterYAxisToParentCenter();
-				this.buttonView.children[i].Visible = true;
-				this.buttonView.children[i].ForegroundColor = buttonUnselectedColor;
-				num += this.buttonView.children[i].Width + this.spacing;
+				buttonView.children[i].Anchor = AnchorPosition.Left;
+				buttonView.children[i].Position = new Vector2(num, 0f);
+				buttonView.children[i].CenterYAxisToParentCenter();
+				buttonView.children[i].Visible = true;
+				buttonView.children[i].ForegroundColor = buttonUnselectedColor;
+				num += buttonView.children[i].Width + spacing;
 			}
+
 			//	Hotbar.groupWindow.Visible = false;
 			//	MasterView.gameScreen.AddChild(Hotbar.groupWindow);
 			ChangedConfiguration();
 			//this.Resize();
-			return;
 		}
-
-		private void bTogglePaintTools_onLeftClick(object sender, EventArgs e)
-		{
-			UIImage uIImage = (UIImage)sender;
-			if (mod.paintToolsHotbar.selected)
-			{
-				mod.paintToolsHotbar.selected = false;
-				mod.paintToolsHotbar.Hide();
-				uIImage.ForegroundColor = buttonUnselectedColor;
-				mod.paintToolsUI.selected = false;
-				mod.paintToolsUI.Hide();
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.paintToolsHotbar.selected = true;
-				mod.paintToolsHotbar.Show();
-				uIImage.ForegroundColor = buttonSelectedColor;
-				mod.paintToolsUI.selected = true;
-				mod.paintToolsUI.Show();
-			}
-		}
+		//
+		// private void bTogglePaintTools_onLeftClick(object sender, EventArgs e)
+		// {
+		// 	UIImage uIImage = (UIImage)sender;
+		// 	if (mod.paintToolsHotbar.selected)
+		// 	{
+		// 		mod.paintToolsHotbar.selected = false;
+		// 		mod.paintToolsHotbar.Hide();
+		// 		uIImage.ForegroundColor = buttonUnselectedColor;
+		// 		mod.paintToolsUI.selected = false;
+		// 		mod.paintToolsUI.Hide();
+		// 	}
+		// 	else
+		// 	{
+		// 		DisableAllWindows();
+		// 		mod.paintToolsHotbar.selected = true;
+		// 		mod.paintToolsHotbar.Show();
+		// 		uIImage.ForegroundColor = buttonSelectedColor;
+		// 		mod.paintToolsUI.selected = true;
+		// 		mod.paintToolsUI.Show();
+		// 	}
+		// }
 
 		private void bToggleExtendedCheat_onLeftClick(object sender, EventArgs e)
 		{
 			UIImage uIImage = (UIImage)sender;
-			if (mod.extendedCheatMenu.selected)
-			{
-				mod.extendedCheatMenu.selected = false;
-				//	uIImage.selected = false;
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.extendedCheatMenu.selected = true;
+			// if (mod.extendedCheatMenu.selected)
+			// {
+				// mod.extendedCheatMenu.selected = false;
+					// uIImage.selected = false;
+				// uIImage.ForegroundColor = buttonUnselectedColor;
+			// }
+			// else
+			// {
+				// DisableAllWindows();
+				// mod.extendedCheatMenu.selected = true;
 				//	uIImage.selected = true;
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
+				// uIImage.ForegroundColor = buttonSelectedColor;
+			// }
+
 			//DisableAllWindows();
 			//mod.extendedCheatMenu.Visible = true;
 		}
@@ -344,38 +341,41 @@ namespace CheatSheet.Menus
 			if (Visible && (IsMouseInside() || button.MouseInside))
 			{
 				Main.LocalPlayer.mouseInterface = true;
-				Main.LocalPlayer.showItemIcon = false;
+				Main.LocalPlayer.cursorItemIconEnabled = false;
 			}
 
-			float x = Main.fontMouseText.MeasureString(UIView.HoverText).X;
-			Vector2 vector = new Vector2((float)Main.mouseX, (float)Main.mouseY) + new Vector2(16f);
-			if (vector.Y > (float)(Main.screenHeight - 30))
+			float x = FontAssets.MouseText.Value.MeasureString(HoverText).X;
+			Vector2 vector = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16f);
+			if (vector.Y > Main.screenHeight - 30)
 			{
-				vector.Y = (float)(Main.screenHeight - 30);
+				vector.Y = Main.screenHeight - 30;
 			}
-			if (vector.X > (float)Main.screenWidth - x)
+
+			if (vector.X > Main.screenWidth - x)
 			{
-				vector.X = (float)(Main.screenWidth - 460);
+				vector.X = Main.screenWidth - 460;
 			}
-			Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
+
+			Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, HoverText, vector.X, vector.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, Vector2.Zero);
 		}
 
 		private void bToggleRecipeBrowser_onLeftClick(object sender, EventArgs e)
 		{
 			UIImage uIImage = (UIImage)sender;
-			if (mod.recipeBrowser.selected)
-			{
-				mod.recipeBrowser.selected = false;
-				//	uIImage.selected = false;
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.recipeBrowser.selected = true;
-				//	uIImage.selected = true;
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
+			// if (mod.recipeBrowser.selected)
+			// {
+			// 	mod.recipeBrowser.selected = false;
+			// 	//	uIImage.selected = false;
+			// 	uIImage.ForegroundColor = buttonUnselectedColor;
+			// }
+			// else
+			// {
+			// 	DisableAllWindows();
+			// 	mod.recipeBrowser.selected = true;
+			// 	//	uIImage.selected = true;
+			// 	uIImage.ForegroundColor = buttonSelectedColor;
+			// }
+
 			//	DisableAllWindows();
 			//	mod.recipeBrowser.Visible = true;
 		}
@@ -407,6 +407,7 @@ namespace CheatSheet.Menus
 				//		uIImage.selected = true;
 				uIImage.ForegroundColor = buttonSelectedColor;
 			}
+
 			//this.npcSpawnWindow.Visible = !this.npcSpawnWindow.Visible;
 			//if (this.npcSpawnWindow.Visible)
 			//{
@@ -419,33 +420,33 @@ namespace CheatSheet.Menus
 		{
 			UIImage uIImage = (UIImage)sender;
 
-			if (mod.eventManagerHotbar.selected)
-			{
-				mod.eventManagerHotbar.selected = false;
-				mod.eventManagerHotbar.Hide();
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.eventManagerHotbar.selected = true;
-				mod.eventManagerHotbar.Show();
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
+			// if (mod.eventManagerHotbar.selected)
+			// {
+			// 	mod.eventManagerHotbar.selected = false;
+			// 	mod.eventManagerHotbar.Hide();
+			// 	uIImage.ForegroundColor = buttonUnselectedColor;
+			// }
+			// else
+			// {
+			// 	DisableAllWindows();
+			// 	mod.eventManagerHotbar.selected = true;
+			// 	mod.eventManagerHotbar.Show();
+			// 	uIImage.ForegroundColor = buttonSelectedColor;
+			// }
 		}
 
 		internal void DisableAllWindows()
 		{
 			mod.itemBrowser.selected = false;
 			mod.npcBrowser.selected = false;
-			mod.extendedCheatMenu.selected = false;
-			mod.recipeBrowser.selected = false;
-			mod.paintToolsHotbar.selected = false;
-			mod.paintToolsUI.selected = false;
-			mod.quickTeleportHotbar.selected = false;
-			mod.quickClearHotbar.selected = false;
-			mod.npcButchererHotbar.selected = false;
-			ConfigurationTool.configurationWindow.selected = false;
+			// mod.extendedCheatMenu.selected = false;
+			// mod.recipeBrowser.selected = false;
+			// mod.paintToolsHotbar.selected = false;
+			// mod.paintToolsUI.selected = false;
+			// mod.quickTeleportHotbar.selected = false;
+			// mod.quickClearHotbar.selected = false;
+			// mod.npcButchererHotbar.selected = false;
+			// ConfigurationTool.configurationWindow.selected = false;
 			//BossDowner.bossDownerWindow.selected = false;
 			//mod.eventManagerHotbar.selected = false;
 
@@ -455,13 +456,13 @@ namespace CheatSheet.Menus
 			//bToggleItemBrowser.selected = false;
 
 			bToggleNPCBrowser.ForegroundColor = buttonUnselectedColor;
-			bToggleRecipeBrowser.ForegroundColor = buttonUnselectedColor;
-			bToggleExtendedCheat.ForegroundColor = buttonUnselectedColor;
+			// bToggleRecipeBrowser.ForegroundColor = buttonUnselectedColor;
+			// bToggleExtendedCheat.ForegroundColor = buttonUnselectedColor;
 			bToggleItemBrowser.ForegroundColor = buttonUnselectedColor;
-			bTogglePaintTools.ForegroundColor = buttonUnselectedColor;
-			bToggleQuickTeleport.ForegroundColor = buttonUnselectedColor;
+			// bTogglePaintTools.ForegroundColor = buttonUnselectedColor;
+			// bToggleQuickTeleport.ForegroundColor = buttonUnselectedColor;
 			bToggleClearMenu.ForegroundColor = buttonUnselectedColor;
-			ConfigurationTool.button.ForegroundColor = buttonUnselectedColor;
+			// ConfigurationTool.button.ForegroundColor = buttonUnselectedColor;
 			//BossDowner.button.ForegroundColor = buttonUnselectedColor;
 			//bToggleEventManager.ForegroundColor = buttonUnselectedColor;
 		}
@@ -523,14 +524,15 @@ namespace CheatSheet.Menus
 
 		private void button_onLeftClick(object sender, EventArgs e)
 		{
-			if (this.hidden)
+			if (hidden)
 			{
-				this.Show();
+				Show();
 			}
 			else
 			{
-				this.Hide();
+				Hide();
 			}
+
 			//this.hidden = !this.hidden;
 			//if (this.hidden)
 			//{
@@ -544,19 +546,19 @@ namespace CheatSheet.Menus
 		private void bClearItems_onLeftClick(object sender, EventArgs e)
 		{
 			UIImage uIImage = (UIImage)sender;
-			if (mod.quickClearHotbar.selected)
-			{
-				mod.quickClearHotbar.selected = false;
-				mod.quickClearHotbar.Hide();
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.quickClearHotbar.selected = true;
-				mod.quickClearHotbar.Show();
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
+			// if (mod.quickClearHotbar.selected)
+			// {
+			// 	mod.quickClearHotbar.selected = false;
+			// 	mod.quickClearHotbar.Hide();
+			// 	uIImage.ForegroundColor = buttonUnselectedColor;
+			// }
+			// else
+			// {
+			// 	DisableAllWindows();
+			// 	mod.quickClearHotbar.selected = true;
+			// 	mod.quickClearHotbar.Show();
+			// 	uIImage.ForegroundColor = buttonSelectedColor;
+			// }
 		}
 
 		private void bToggleEnemies_onLeftClick(object sender, EventArgs e)
@@ -588,6 +590,7 @@ namespace CheatSheet.Menus
 				mod.itemBrowser.selected = true;
 				uIImage.ForegroundColor = buttonSelectedColor;
 			}
+
 			//	DisableAllWindows();
 			//	mod.itemBrowser.Visible = true;
 			//Creative.ToggleItemBrowser();
@@ -648,6 +651,7 @@ namespace CheatSheet.Menus
 			{
 				player = Main.player[whoAmI];
 			}
+
 			Vector2 changePos = new Vector2((int)player.position.X, (int)player.position.Y);
 			for (int i = 0; i < Main.maxItems; i++)
 			{
@@ -656,86 +660,90 @@ namespace CheatSheet.Menus
 					Main.item[i].position = changePos;
 					if (syncData)
 					{
-						NetMessage.SendData(21, -1, -1, null, i, Main.item[i].netID, 0f, 0f, 0);
+						NetMessage.SendData(21, -1, -1, null, i, Main.item[i].netID);
 					}
 				}
 			}
 		}
+		//
+		// private void bButcher_onLeftClick(object sender, EventArgs e)
+		// {
+		// 	UIImage uIImage = (UIImage)sender;
+		// 	if (mod.npcButchererHotbar.selected)
+		// 	{
+		// 		mod.npcButchererHotbar.selected = false;
+		// 		mod.npcButchererHotbar.Hide();
+		// 		uIImage.ForegroundColor = buttonUnselectedColor;
+		// 	}
+		// 	else
+		// 	{
+		// 		DisableAllWindows();
+		// 		mod.npcButchererHotbar.selected = true;
+		// 		mod.npcButchererHotbar.Show();
+		// 		uIImage.ForegroundColor = buttonSelectedColor;
+		// 	}
+		// }
 
-		private void bButcher_onLeftClick(object sender, EventArgs e)
-		{
-			UIImage uIImage = (UIImage)sender;
-			if (mod.npcButchererHotbar.selected)
-			{
-				mod.npcButchererHotbar.selected = false;
-				mod.npcButchererHotbar.Hide();
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.npcButchererHotbar.selected = true;
-				mod.npcButchererHotbar.Show();
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
-		}
-
-		private void bToggleQuickTeleport_onLeftClick(object sender, EventArgs e)
-		{
-			UIImage uIImage = (UIImage)sender;
-			if (mod.quickTeleportHotbar.selected)
-			{
-				mod.quickTeleportHotbar.selected = false;
-				mod.quickTeleportHotbar.Hide();
-				uIImage.ForegroundColor = buttonUnselectedColor;
-			}
-			else
-			{
-				DisableAllWindows();
-				mod.quickTeleportHotbar.selected = true;
-				mod.quickTeleportHotbar.Show();
-				uIImage.ForegroundColor = buttonSelectedColor;
-			}
-		}
+		// private void bToggleQuickTeleport_onLeftClick(object sender, EventArgs e)
+		// {
+		// 	UIImage uIImage = (UIImage)sender;
+		// 	if (mod.quickTeleportHotbar.selected)
+		// 	{
+		// 		mod.quickTeleportHotbar.selected = false;
+		// 		mod.quickTeleportHotbar.Hide();
+		// 		uIImage.ForegroundColor = buttonUnselectedColor;
+		// 	}
+		// 	else
+		// 	{
+		// 		DisableAllWindows();
+		// 		mod.quickTeleportHotbar.selected = true;
+		// 		mod.quickTeleportHotbar.Show();
+		// 		uIImage.ForegroundColor = buttonSelectedColor;
+		// 	}
+		// }
 
 		public override void Update()
 		{
 			try
 			{
-				if (this.hidden)
+				if (hidden)
 				{
-					this.lerpAmount -= /*Mod.deltaTime*/ .01f * Hotbar.moveSpeed;
-					if (this.lerpAmount < 0f)
+					lerpAmount -= /*Mod.deltaTime*/ .01f * moveSpeed;
+					if (lerpAmount < 0f)
 					{
-						this.lerpAmount = 0f;
+						lerpAmount = 0f;
 					}
-					float y = MathHelper.SmoothStep(this.hiddenPosition, this.shownPosition, this.lerpAmount);
-					base.Position = new Vector2(Hotbar.xPosition, y);
+
+					float y = MathHelper.SmoothStep(hiddenPosition, shownPosition, lerpAmount);
+					Position = new Vector2(xPosition, y);
 				}
 				else
 				{
-					this.lerpAmount += .01f/*Mod.deltaTime */* Hotbar.moveSpeed;
-					if (this.lerpAmount > 1f)
+					lerpAmount += .01f /*Mod.deltaTime */ * moveSpeed;
+					if (lerpAmount > 1f)
 					{
-						this.lerpAmount = 1f;
+						lerpAmount = 1f;
 					}
-					float y2 = MathHelper.SmoothStep(this.hiddenPosition, this.shownPosition, this.lerpAmount);
-					base.Position = new Vector2(Hotbar.xPosition, y2);
+
+					float y2 = MathHelper.SmoothStep(hiddenPosition, shownPosition, lerpAmount);
+					Position = new Vector2(xPosition, y2);
 				}
-				if (mod.paintToolsHotbar.Visible || mod.quickTeleportHotbar.Visible || mod.quickClearHotbar.Visible || mod.npcButchererHotbar.Visible/* || mod.eventManagerHotbar.Visible*/)
-				{
-					int offset = mod.npcButchererHotbar.Visible ? (int)this.button.Width : 0;
-					this.button.Position = new Vector2(0, -this.button.Height - Math.Max(0, (base.Position.Y - currentHotbar.Position.Y)));
-					button.CenterXAxisToParentCenter(offset);
-					arrow.Position = button.Position;
-				}
-				else
-				{
-					this.button.Position = new Vector2(0, -this.button.Height);
+
+				// if (mod.paintToolsHotbar.Visible || mod.quickTeleportHotbar.Visible || mod.quickClearHotbar.Visible || mod.npcButchererHotbar.Visible /* || mod.eventManagerHotbar.Visible*/)
+				// {
+				// 	int offset = mod.npcButchererHotbar.Visible ? (int)button.Width : 0;
+				// 	button.Position = new Vector2(0, -button.Height - Math.Max(0, Position.Y - currentHotbar.Position.Y));
+				// 	button.CenterXAxisToParentCenter(offset);
+				// 	arrow.Position = button.Position;
+				// }
+				// else
+				// {
+					button.Position = new Vector2(0, -button.Height);
 					button.CenterXAxisToParentCenter();
 					arrow.Position = button.Position;
-				}
-				base.CenterXAxisToParentCenter();
+				// }
+
+				CenterXAxisToParentCenter();
 				base.Update();
 			}
 			catch (Exception e)
@@ -829,13 +837,14 @@ namespace CheatSheet.Menus
 
 		private bool ControlExists(UIView view)
 		{
-			foreach (UIView current in this.children)
+			foreach (UIView current in children)
 			{
 				if (current == view)
 				{
 					return true;
 				}
 			}
+
 			return false;
 		}
 
@@ -856,26 +865,24 @@ namespace CheatSheet.Menus
 			bool heros = ModLoader.GetMod("HEROsMod") != null;
 			bool recentHeros = herosMod != null && herosMod.Version >= new Version(0, 2, 2);
 			bool itemBrowserPermissions = true;
-			if (Main.netMode == 1 && recentHeros && herosMod.Call("HasPermission", Main.myPlayer, "ItemBrowser") is bool resultA)
-				itemBrowserPermissions = resultA;
+			if (Main.netMode == 1 && recentHeros && herosMod.Call("HasPermission", Main.myPlayer, "ItemBrowser") is bool resultA) itemBrowserPermissions = resultA;
 			bool SpawnNPCsPermissions = true;
-			if (Main.netMode == 1 && recentHeros && herosMod.Call("HasPermission", Main.myPlayer, "SpawnNPCs") is bool resultB)
-				SpawnNPCsPermissions = resultB;
+			if (Main.netMode == 1 && recentHeros && herosMod.Call("HasPermission", Main.myPlayer, "SpawnNPCs") is bool resultB) SpawnNPCsPermissions = resultB;
 
 			bToggleItemBrowser.Visible = ConfigurationLoader.personalConfiguration.ItemBrowser && itemBrowserPermissions;
 			bToggleNPCBrowser.Visible = ConfigurationLoader.personalConfiguration.NPCBrowser && SpawnNPCsPermissions;
-			bToggleRecipeBrowser.Visible = ConfigurationLoader.personalConfiguration.RecipeBrowser && CheatSheet.instance.herosPermissions[CheatSheet.RecipeBrowser_Permission];
-			MinionSlotBooster.button.Visible = ConfigurationLoader.personalConfiguration.MinionBooster && CheatSheet.instance.herosPermissions[CheatSheet.MinionBooster_Permission];
+			// bToggleRecipeBrowser.Visible = ConfigurationLoader.personalConfiguration.RecipeBrowser && CheatSheet.instance.herosPermissions[CheatSheet.RecipeBrowser_Permission];
+			// MinionSlotBooster.button.Visible = ConfigurationLoader.personalConfiguration.MinionBooster && CheatSheet.instance.herosPermissions[CheatSheet.MinionBooster_Permission];
 			bToggleClearMenu.Visible = ConfigurationLoader.personalConfiguration.ClearMenu && CheatSheet.instance.herosPermissions[CheatSheet.ClearItemNPCProjectile_Permission];
-			bTogglePaintTools.Visible = ConfigurationLoader.personalConfiguration.PaintTools && CheatSheet.instance.herosPermissions[CheatSheet.PaintTools_Permission];
-			bToggleExtendedCheat.Visible = ConfigurationLoader.personalConfiguration.ModExtensions && CheatSheet.instance.herosPermissions[CheatSheet.CheatSheetExtensions_Permission];
+			// bTogglePaintTools.Visible = ConfigurationLoader.personalConfiguration.PaintTools && CheatSheet.instance.herosPermissions[CheatSheet.PaintTools_Permission];
+			// bToggleExtendedCheat.Visible = ConfigurationLoader.personalConfiguration.ModExtensions && CheatSheet.instance.herosPermissions[CheatSheet.CheatSheetExtensions_Permission];
 			bCycleExtraAccessorySlots.Visible = ConfigurationLoader.personalConfiguration.ExtraAccessorySlots && CheatSheet.instance.herosPermissions[CheatSheet.ExtraAccessories_Permission];
 			bVacuum.Visible = ConfigurationLoader.personalConfiguration.Vacuum && CheatSheet.instance.herosPermissions[CheatSheet.Vacuum_Permission];
 			bToggleNPCButcherer.Visible = ConfigurationLoader.personalConfiguration.Butcher && CheatSheet.instance.herosPermissions[CheatSheet.NPCButcher_Permission];
-			bToggleQuickTeleport.Visible = ConfigurationLoader.personalConfiguration.Waypoints && CheatSheet.instance.herosPermissions[CheatSheet.QuickTeleport_Permission];
-			LightHack.button.Visible = ConfigurationLoader.personalConfiguration.LightHack && !heros;
-			GodMode.button.Visible = ConfigurationLoader.personalConfiguration.GodMode && !heros;
-			SpawnRateMultiplier.button.Visible = ConfigurationLoader.personalConfiguration.SpawnRate && SpawnRateMultiplier.HasPermission;
+			// bToggleQuickTeleport.Visible = ConfigurationLoader.personalConfiguration.Waypoints && CheatSheet.instance.herosPermissions[CheatSheet.QuickTeleport_Permission];
+			// LightHack.button.Visible = ConfigurationLoader.personalConfiguration.LightHack && !heros;
+			// GodMode.button.Visible = ConfigurationLoader.personalConfiguration.GodMode && !heros;
+			// SpawnRateMultiplier.button.Visible = ConfigurationLoader.personalConfiguration.SpawnRate && SpawnRateMultiplier.HasPermission;
 			//BossDowner.button.Visible = ConfigurationLoader.configuration.BossDowner;
 			//bToggleEventManager.Visible = ConfigurationLoader.configuration.EventManager;
 			//Main.NewText("bToggleItemBrowser " + bToggleItemBrowser.Visible);
@@ -891,65 +898,76 @@ namespace CheatSheet.Menus
 
 		public void Resize()
 		{
-			float num = this.spacing;
-			for (int i = 0; i < this.buttonView.children.Count; i++)
+			float num = spacing;
+			for (int i = 0; i < buttonView.children.Count; i++)
 			{
-				if (this.buttonView.children[i].Visible)
+				if (buttonView.children[i].Visible)
 				{
-					this.buttonView.children[i].X = num;
-					num += this.buttonView.children[i].Width + this.spacing;
+					buttonView.children[i].X = num;
+					num += buttonView.children[i].Width + spacing;
 				}
 			}
-			base.Width = num;
-			this.buttonView.Width = base.Width;
-			this.button.CenterXAxisToParentCenter();
-			this.arrow.Position = this.button.Position;
+
+			Width = num;
+			buttonView.Width = Width;
+			button.CenterXAxisToParentCenter();
+			arrow.Position = button.Position;
 		}
 
 		public void Hide()
 		{
-			this.hidden = true;
-			this.arrow.SpriteEffect = SpriteEffects.None;
+			hidden = true;
+			arrow.SpriteEffect = SpriteEffects.None;
 			if (mod.itemBrowser.selected && !mod.itemBrowser.hidden)
 			{
 				mod.itemBrowser.Hide();
 			}
-			if (mod.recipeBrowser.selected && !mod.recipeBrowser.hidden)
-			{
-				mod.recipeBrowser.Hide();
-			}
+
+			// if (mod.recipeBrowser.selected && !mod.recipeBrowser.hidden)
+			// {
+				// mod.recipeBrowser.Hide();
+			// }
+
 			if (mod.npcBrowser.selected && !mod.npcBrowser.hidden)
 			{
 				mod.npcBrowser.Hide();
 			}
-			if (mod.extendedCheatMenu.selected && !mod.extendedCheatMenu.hidden)
-			{
-				mod.extendedCheatMenu.Hide();
-			}
-			if (mod.paintToolsHotbar.selected && !mod.paintToolsHotbar.hidden)
-			{
-				mod.paintToolsHotbar.Hide();
-			}
-			if (mod.paintToolsUI.selected && !mod.paintToolsUI.hidden)
-			{
-				mod.paintToolsUI.Hide();
-			}
-			if (mod.quickTeleportHotbar.selected && !mod.quickTeleportHotbar.hidden)
-			{
-				mod.quickTeleportHotbar.Hide();
-			}
-			if (mod.quickClearHotbar.selected && !mod.quickClearHotbar.hidden)
-			{
-				mod.quickClearHotbar.Hide();
-			}
-			if (mod.npcButchererHotbar.selected && !mod.npcButchererHotbar.hidden)
-			{
-				mod.npcButchererHotbar.Hide();
-			}
-			if (ConfigurationTool.configurationWindow.selected && !ConfigurationTool.configurationWindow.hidden)
-			{
-				ConfigurationTool.configurationWindow.Hide();
-			}
+
+			// if (mod.extendedCheatMenu.selected && !mod.extendedCheatMenu.hidden)
+			// {
+			// 	mod.extendedCheatMenu.Hide();
+			// }
+			//
+			// if (mod.paintToolsHotbar.selected && !mod.paintToolsHotbar.hidden)
+			// {
+			// 	mod.paintToolsHotbar.Hide();
+			// }
+			//
+			// if (mod.paintToolsUI.selected && !mod.paintToolsUI.hidden)
+			// {
+			// 	mod.paintToolsUI.Hide();
+			// }
+			//
+			// if (mod.quickTeleportHotbar.selected && !mod.quickTeleportHotbar.hidden)
+			// {
+			// 	mod.quickTeleportHotbar.Hide();
+			// }
+			//
+			// if (mod.quickClearHotbar.selected && !mod.quickClearHotbar.hidden)
+			// {
+			// 	mod.quickClearHotbar.Hide();
+			// }
+
+			// if (mod.npcButchererHotbar.selected && !mod.npcButchererHotbar.hidden)
+			// {
+				// mod.npcButchererHotbar.Hide();
+			// }
+
+			// if (ConfigurationTool.configurationWindow.selected && !ConfigurationTool.configurationWindow.hidden)
+			// {
+				// ConfigurationTool.configurationWindow.Hide();
+			// }
+
 			//if (BossDowner.bossDownerWindow.selected && !BossDowner.bossDownerWindow.hidden)
 			//{
 			//	BossDowner.bossDownerWindow.Hide();
@@ -962,48 +980,57 @@ namespace CheatSheet.Menus
 
 		public void Show()
 		{
-			this.hidden = false;
-			this.arrow.SpriteEffect = SpriteEffects.FlipVertically;
+			hidden = false;
+			arrow.SpriteEffect = SpriteEffects.FlipVertically;
 			if (mod.itemBrowser.selected)
 			{
 				mod.itemBrowser.Show();
 			}
-			if (mod.recipeBrowser.selected)
-			{
-				mod.recipeBrowser.Show();
-			}
+
+			// if (mod.recipeBrowser.selected)
+			// {
+			// 	mod.recipeBrowser.Show();
+			// }
+
 			if (mod.npcBrowser.selected)
 			{
 				mod.npcBrowser.Show();
 			}
-			if (mod.extendedCheatMenu.selected)
-			{
-				mod.extendedCheatMenu.Show();
-			}
-			if (mod.paintToolsHotbar.selected)
-			{
-				mod.paintToolsHotbar.Show();
-			}
-			if (mod.paintToolsUI.selected)
-			{
-				mod.paintToolsUI.Show();
-			}
-			if (mod.quickTeleportHotbar.selected)
-			{
-				mod.quickTeleportHotbar.Show();
-			}
-			if (mod.quickClearHotbar.selected)
-			{
-				mod.quickClearHotbar.Show();
-			}
-			if (mod.npcButchererHotbar.selected)
-			{
-				mod.npcButchererHotbar.Show();
-			}
-			if (ConfigurationTool.configurationWindow.selected)
-			{
-				ConfigurationTool.configurationWindow.Show();
-			}
+
+			// if (mod.extendedCheatMenu.selected)
+			// {
+			// 	mod.extendedCheatMenu.Show();
+			// }
+			//
+			// if (mod.paintToolsHotbar.selected)
+			// {
+			// 	mod.paintToolsHotbar.Show();
+			// }
+			//
+			// if (mod.paintToolsUI.selected)
+			// {
+			// 	mod.paintToolsUI.Show();
+			// }
+			//
+			// if (mod.quickTeleportHotbar.selected)
+			// {
+			// 	mod.quickTeleportHotbar.Show();
+			// }
+			//
+			// if (mod.quickClearHotbar.selected)
+			// {
+			// 	mod.quickClearHotbar.Show();
+			// }
+
+			// if (mod.npcButchererHotbar.selected)
+			// {
+				// mod.npcButchererHotbar.Show();
+			// }
+
+			// if (ConfigurationTool.configurationWindow.selected)
+			// {
+				// ConfigurationTool.configurationWindow.Show();
+			// }
 			//if (BossDowner.bossDownerWindow.selected)
 			//{
 			//	BossDowner.bossDownerWindow.Show();
@@ -1014,7 +1041,8 @@ namespace CheatSheet.Menus
 			//}
 
 			Mod herosMod = ModLoader.GetMod("HEROsMod");
-			if (herosMod != null) {
+			if (herosMod != null)
+			{
 				herosMod.Call("HideHotbar");
 			}
 		}
@@ -1089,10 +1117,10 @@ namespace CheatSheet.Menus
 //			if (Visible && IsMouseInside())
 //			{
 //				Main.LocalPlayer.mouseInterface = true;
-//				Main.LocalPlayer.showItemIcon = false;
+//				Main.LocalPlayer.cursorItemIconEnabled = false;
 //			}
 
-//			float x = Main.fontMouseText.MeasureString(UIView.HoverText).X;
+//			float x = FontAssets.MouseText.Value.MeasureString(UIView.HoverText).X;
 //			Vector2 vector = new Vector2((float)Main.mouseX, (float)Main.mouseY) + new Vector2(16f);
 //			if (vector.Y > (float)(Main.screenHeight - 30))
 //			{
@@ -1102,7 +1130,7 @@ namespace CheatSheet.Menus
 //			{
 //				vector.X = (float)(Main.screenWidth - 460);
 //			}
-//			Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
+//			Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
 //		}
 
 //		public override void Update()

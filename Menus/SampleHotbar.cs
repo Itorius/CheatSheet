@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 
 namespace CheatSheet.Menus
@@ -23,17 +24,17 @@ namespace CheatSheet.Menus
 			this.mod = mod;
 			//parentHotbar = mod.hotbar;
 
-			this.buttonView = new UIView();
-			base.Visible = false;
+			buttonView = new UIView();
+			Visible = false;
 
 			// Button images
-			bSampleButton = new UIImage(Main.itemTexture[ItemID.Paintbrush]);
+			bSampleButton = new UIImage(TextureAssets.Item[ItemID.Paintbrush].Value);
 
 			// Button tooltips
 			bSampleButton.Tooltip = "Sample Tooltip";
 
 			// Button EventHandlers
-			bSampleButton.onLeftClick += new EventHandler(this.bSampleButton_onLeftClick);
+			bSampleButton.onLeftClick += bSampleButton_onLeftClick;
 			bSampleButton.onRightClick += (s, e) =>
 			{
 				// Sample handling
@@ -48,29 +49,34 @@ namespace CheatSheet.Menus
 					Main.LocalPlayer.mouseInterface = true;
 				}
 			};
-			onMouseUp += (s, e) => { justMouseDown = true; mouseDown = false; /*startTileX = -1; startTileY = -1;*/ };
+			onMouseUp += (s, e) =>
+			{
+				justMouseDown = true;
+				mouseDown = false; /*startTileX = -1; startTileY = -1;*/
+			};
 
 			// ButtonView
 			buttonView.AddChild(bSampleButton);
 
-			base.Width = 200f;
-			base.Height = 55f;
-			this.buttonView.Height = base.Height;
-			base.Anchor = AnchorPosition.Top;
-			this.AddChild(this.buttonView);
-			base.Position = new Vector2(Hotbar.xPosition, this.hiddenPosition);
-			base.CenterXAxisToParentCenter();
-			float num = this.spacing;
-			for (int i = 0; i < this.buttonView.children.Count; i++)
+			Width = 200f;
+			Height = 55f;
+			buttonView.Height = Height;
+			Anchor = AnchorPosition.Top;
+			AddChild(buttonView);
+			Position = new Vector2(Hotbar.xPosition, hiddenPosition);
+			CenterXAxisToParentCenter();
+			float num = spacing;
+			for (int i = 0; i < buttonView.children.Count; i++)
 			{
-				this.buttonView.children[i].Anchor = AnchorPosition.Left;
-				this.buttonView.children[i].Position = new Vector2(num, 0f);
-				this.buttonView.children[i].CenterYAxisToParentCenter();
-				this.buttonView.children[i].Visible = true;
-				this.buttonView.children[i].ForegroundColor = buttonUnselectedColor;
-				num += this.buttonView.children[i].Width + this.spacing;
+				buttonView.children[i].Anchor = AnchorPosition.Left;
+				buttonView.children[i].Position = new Vector2(num, 0f);
+				buttonView.children[i].CenterYAxisToParentCenter();
+				buttonView.children[i].Visible = true;
+				buttonView.children[i].ForegroundColor = buttonUnselectedColor;
+				num += buttonView.children[i].Width + spacing;
 			}
-			this.Resize();
+
+			Resize();
 		}
 
 		private void bSampleButton_onLeftClick(object sender, EventArgs e)
@@ -82,7 +88,7 @@ namespace CheatSheet.Menus
 		{
 			DoSlideMovement();
 
-			base.CenterXAxisToParentCenter();
+			CenterXAxisToParentCenter();
 			base.Update();
 		}
 
@@ -91,12 +97,12 @@ namespace CheatSheet.Menus
 			if (Visible)
 			{
 				spriteBatch.End();
-				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, this._rasterizerState, null, Main.UIScaleMatrix);
+				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, _rasterizerState, null, Main.UIScaleMatrix);
 				//	Rectangle scissorRectangle = new Rectangle((int)base.X- (int)base.Width, (int)base.Y, (int)base.Width, (int)base.Height);
 				//Parent.Position.Y
 				//		Main.NewText((int)Parent.Position.Y + " " + (int)shownPosition);
 				//	Rectangle scissorRectangle = new Rectangle((int)(base.X - base.Width / 2), (int)(shownPosition), (int)base.Width, (int)base.Height);
-				Rectangle scissorRectangle = new Rectangle((int)(base.X - base.Width / 2), (int)(shownPosition), (int)base.Width, (int)(mod.hotbar.Position.Y - shownPosition));
+				Rectangle scissorRectangle = new Rectangle((int)(X - Width / 2), (int)shownPosition, (int)Width, (int)(mod.hotbar.Position.Y - shownPosition));
 				/*if (scissorRectangle.X < 0)
 				{
 					scissorRectangle.Width += scissorRectangle.X;
@@ -128,10 +134,10 @@ namespace CheatSheet.Menus
 
 			//	base.Draw(spriteBatch);
 
-			if (Visible && (base.IsMouseInside() /*|| button.MouseInside*/))
+			if (Visible && base.IsMouseInside())
 			{
 				Main.LocalPlayer.mouseInterface = true;
-				//Main.LocalPlayer.showItemIcon = false;
+				//Main.LocalPlayer.cursorItemIconEnabled = false;
 			}
 
 			if (Visible && IsMouseInside())
@@ -139,17 +145,19 @@ namespace CheatSheet.Menus
 				Main.LocalPlayer.mouseInterface = true;
 			}
 
-			float x = Main.fontMouseText.MeasureString(UIView.HoverText).X;
-			Vector2 vector = new Vector2((float)Main.mouseX, (float)Main.mouseY) + new Vector2(16f);
-			if (vector.Y > (float)(Main.screenHeight - 30))
+			float x = FontAssets.MouseText.Value.MeasureString(HoverText).X;
+			Vector2 vector = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16f);
+			if (vector.Y > Main.screenHeight - 30)
 			{
-				vector.Y = (float)(Main.screenHeight - 30);
+				vector.Y = Main.screenHeight - 30;
 			}
-			if (vector.X > (float)Main.screenWidth - x)
+
+			if (vector.X > Main.screenWidth - x)
 			{
-				vector.X = (float)(Main.screenWidth - 460);
+				vector.X = Main.screenWidth - 460;
 			}
-			Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, UIView.HoverText, vector.X, vector.Y, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, Vector2.Zero, 1f);
+
+			Utils.DrawBorderStringFourWay(spriteBatch, FontAssets.MouseText.Value, HoverText, vector.X, vector.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, Vector2.Zero);
 		}
 
 		protected override bool IsMouseInside()
@@ -159,17 +167,18 @@ namespace CheatSheet.Menus
 
 		public void Resize()
 		{
-			float num = this.spacing;
-			for (int i = 0; i < this.buttonView.children.Count; i++)
+			float num = spacing;
+			for (int i = 0; i < buttonView.children.Count; i++)
 			{
-				if (this.buttonView.children[i].Visible)
+				if (buttonView.children[i].Visible)
 				{
-					this.buttonView.children[i].X = num;
-					num += this.buttonView.children[i].Width + this.spacing;
+					buttonView.children[i].X = num;
+					num += buttonView.children[i].Width + spacing;
 				}
 			}
-			base.Width = num;
-			this.buttonView.Width = base.Width;
+
+			Width = num;
+			buttonView.Width = Width;
 		}
 
 		public void Hide()

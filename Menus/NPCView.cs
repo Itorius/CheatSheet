@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 
 namespace CheatSheet.Menus
 {
@@ -25,50 +26,49 @@ namespace CheatSheet.Menus
 
 		public int negativeSlots = 65; // number of netIDs < 0
 
-		private float slotSize = (float)Slot.backgroundTexture.Width * 0.85f;
+		private float slotSize = Slot.backgroundTexture.Width * 0.85f;
 
 		private int slotRows = 6;
 
 		public int[] selectedCategory
 		{
-			get
-			{
-				return this._selectedCategory;
-			}
+			get { return _selectedCategory; }
 			set
 			{
-				List<int> list = value.ToList<int>();
+				List<int> list = value.ToList();
 
 				for (int i = 0; i < list.Count; i++)
 				{
-					NPCSlot slot = this.allNPCSlot[list[i]];
+					NPCSlot slot = allNPCSlot[list[i]];
 					if (slot.npcType == 0)
 					{
 						list.RemoveAt(i);
 						i--;
 					}
 				}
-				this._selectedCategory = list.ToArray();
+
+				_selectedCategory = list.ToArray();
 			}
 		}
 
 		public NPCView()
 		{
-			base.Width = (this.slotSize + (float)this.slotSpace) * (float)this.slotColumns + (float)this.slotSpace + 20f;
-			base.Height = 200f;
-			this.allNPCSlot = new NPCSlot[Main.npcTexture.Length + negativeSlots];
-			for (int i = 0; i < this.allNPCSlot.Length; i++)
+			Width = (slotSize + slotSpace) * slotColumns + slotSpace + 20f;
+			Height = 200f;
+			allNPCSlot = new NPCSlot[TextureAssets.Npc.Length + negativeSlots];
+			for (int i = 0; i < allNPCSlot.Length; i++)
 			{
-				int type = (i >= this.allNPCSlot.Length - negativeSlots) ? -(i - this.allNPCSlot.Length + negativeSlots + 1) : i;
-				this.allNPCSlot[i] = new NPCSlot(type, i);
+				int type = i >= allNPCSlot.Length - negativeSlots ? -(i - allNPCSlot.Length + negativeSlots + 1) : i;
+				allNPCSlot[i] = new NPCSlot(type, i);
 			}
+
 			//	this.allNPCSlot = (from s in this.allNPCSlot
 			//					   select s).ToArray<NPCSlot>();
 		}
 
-		/*	this.allNPCSlot = new NPCSlot[Main.npcTexture.Length + 65];
+		/*	this.allNPCSlot = new NPCSlot[TextureAssets.Npc.Length + 65];
 			int index = 0;
-			for (int i = -65; i < Main.npcTexture.Length; i++)
+			for (int i = -65; i < TextureAssets.Npc.Length; i++)
 			{
 				//if (i == 0) continue;
 				this.allNPCSlot[index] = new NPCSlot(i);
@@ -82,21 +82,22 @@ namespace CheatSheet.Menus
 
 		public void ReorderSlots()
 		{
-			base.ScrollPosition = 0f;
-			base.ClearContent();
-			for (int i = 0; i < this.activeSlots.Length; i++)
+			ScrollPosition = 0f;
+			ClearContent();
+			for (int i = 0; i < activeSlots.Length; i++)
 			{
 				int num = i;
-				NPCSlot slot = this.allNPCSlot[this.activeSlots[num]];
-				int num2 = i % this.slotColumns;
-				int num3 = i / this.slotColumns;
-				float x = (float)this.slotSpace + (float)num2 * (slot.Width + (float)this.slotSpace);
-				float y = (float)this.slotSpace + (float)num3 * (slot.Height + (float)this.slotSpace);
+				NPCSlot slot = allNPCSlot[activeSlots[num]];
+				int num2 = i % slotColumns;
+				int num3 = i / slotColumns;
+				float x = slotSpace + num2 * (slot.Width + slotSpace);
+				float y = slotSpace + num3 * (slot.Height + slotSpace);
 				slot.Position = new Vector2(x, y);
 				slot.Offset = Vector2.Zero;
-				this.AddChild(slot);
+				AddChild(slot);
 			}
-			base.ContentHeight = base.GetLastChild().Y + base.GetLastChild().Height + this.spacing;
+
+			ContentHeight = GetLastChild().Y + GetLastChild().Height + spacing;
 		}
 	}
 }

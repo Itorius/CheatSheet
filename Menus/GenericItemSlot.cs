@@ -4,28 +4,29 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 
 namespace CheatSheet.Menus
 {
 	internal class GenericItemSlot : UIView
 	{
-		public static Texture2D backgroundTexture = Main.inventoryBack9Texture;
+		public static Texture2D backgroundTexture = TextureAssets.InventoryBack9.Value;
 
 		public Item item = null;
 
 		public GenericItemSlot()
 		{
-			base.onHover += new EventHandler(this.Slot_OnHover);
+			onHover += Slot_OnHover;
 		}
 
 		protected override float GetWidth()
 		{
-			return (float)GenericItemSlot.backgroundTexture.Width * base.Scale;
+			return backgroundTexture.Width * Scale;
 		}
 
 		protected override float GetHeight()
 		{
-			return (float)GenericItemSlot.backgroundTexture.Height * base.Scale;
+			return backgroundTexture.Height * Scale;
 		}
 
 		private void Slot_OnHover(object sender, EventArgs e)
@@ -35,7 +36,7 @@ namespace CheatSheet.Menus
 				//	UIView.HoverText = this.item.name;
 				//	UIView.HoverItem = this.item.Clone();
 
-				Main.hoverItemName = this.item.Name;
+				Main.hoverItemName = item.Name;
 				Main.HoverItem = item.Clone();
 				Main.HoverItem.SetNameOverride(Main.HoverItem.Name + (Main.HoverItem.modItem != null ? " [" + Main.HoverItem.modItem.mod.Name + "]" : ""));
 			}
@@ -45,8 +46,9 @@ namespace CheatSheet.Menus
 		{
 			if (item != null)
 			{
-				spriteBatch.Draw(Slot.backgroundTexture, base.DrawPosition, null, Color.White, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
-				Texture2D texture2D = Main.itemTexture[this.item.type];
+				spriteBatch.Draw(Slot.backgroundTexture, DrawPosition, null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+				Main.instance.LoadItem(item.type);
+				Texture2D texture2D = TextureAssets.Item[item.type].Value;
 				Rectangle rectangle2;
 				if (Main.itemAnimations[item.type] != null)
 				{
@@ -54,35 +56,39 @@ namespace CheatSheet.Menus
 				}
 				else
 				{
-					rectangle2 = texture2D.Frame(1, 1, 0, 0);
+					rectangle2 = texture2D.Frame();
 				}
+
 				float num = 1f;
-				float num2 = (float)Slot.backgroundTexture.Width * base.Scale * 0.6f;
-				if ((float)rectangle2.Width > num2 || (float)rectangle2.Height > num2)
+				float num2 = Slot.backgroundTexture.Width * Scale * 0.6f;
+				if (rectangle2.Width > num2 || rectangle2.Height > num2)
 				{
 					if (rectangle2.Width > rectangle2.Height)
 					{
-						num = num2 / (float)rectangle2.Width;
+						num = num2 / rectangle2.Width;
 					}
 					else
 					{
-						num = num2 / (float)rectangle2.Height;
+						num = num2 / rectangle2.Height;
 					}
 				}
-				Vector2 drawPosition = base.DrawPosition;
-				drawPosition.X += (float)Slot.backgroundTexture.Width * base.Scale / 2f - (float)rectangle2.Width * num / 2f;
-				drawPosition.Y += (float)Slot.backgroundTexture.Height * base.Scale / 2f - (float)rectangle2.Height * num / 2f;
-				this.item.GetColor(Color.White);
-				spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), this.item.GetAlpha(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
-				if (this.item.color != default(Color))
+
+				Vector2 drawPosition = DrawPosition;
+				drawPosition.X += Slot.backgroundTexture.Width * Scale / 2f - rectangle2.Width * num / 2f;
+				drawPosition.Y += Slot.backgroundTexture.Height * Scale / 2f - rectangle2.Height * num / 2f;
+				item.GetColor(Color.White);
+				spriteBatch.Draw(texture2D, drawPosition, rectangle2, item.GetAlpha(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
+				if (item.color != default)
 				{
-					spriteBatch.Draw(texture2D, drawPosition, new Rectangle?(rectangle2), this.item.GetColor(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
+					spriteBatch.Draw(texture2D, drawPosition, rectangle2, item.GetColor(Color.White), 0f, Vector2.Zero, num, SpriteEffects.None, 0f);
 				}
-				if (this.item.stack > 1)
+
+				if (item.stack > 1)
 				{
-					spriteBatch.DrawString(Main.fontItemStack, this.item.stack.ToString(), new Vector2(base.DrawPosition.X + 10f * base.Scale, base.DrawPosition.Y + 26f * base.Scale), Color.White, 0f, Vector2.Zero, base.Scale, SpriteEffects.None, 0f);
+					spriteBatch.DrawString(FontAssets.ItemStack.Value, item.stack.ToString(), new Vector2(DrawPosition.X + 10f * Scale, DrawPosition.Y + 26f * Scale), Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 				}
 			}
+
 			base.Draw(spriteBatch);
 		}
 	}

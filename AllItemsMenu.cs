@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -43,9 +44,9 @@ namespace CheatSheet
 		{
 			CheatSheet.instance.itemBrowser.Draw(spriteBatch);
 			CheatSheet.instance.npcBrowser.Draw(spriteBatch);
-			CheatSheet.instance.recipeBrowser.Draw(spriteBatch);
-			CheatSheet.instance.extendedCheatMenu.Draw(spriteBatch);
-			CheatSheet.instance.paintToolsUI.Draw(spriteBatch);
+			// CheatSheet.instance.recipeBrowser.Draw(spriteBatch);
+			// CheatSheet.instance.extendedCheatMenu.Draw(spriteBatch);
+			// CheatSheet.instance.paintToolsUI.Draw(spriteBatch);
 
 			//			CheatSheet.instance.itemBrowser.Update();
 			//	spriteBatch.End();
@@ -53,25 +54,25 @@ namespace CheatSheet
 
 			CheatSheet.instance.npcBrowser.Update();
 			CheatSheet.instance.itemBrowser.Update();
-			CheatSheet.instance.recipeBrowser.Update();
-			CheatSheet.instance.extendedCheatMenu.Update();
+			// CheatSheet.instance.recipeBrowser.Update();
+			// CheatSheet.instance.extendedCheatMenu.Update();
 
 			CheatSheet.instance.hotbar.Update();
-			CheatSheet.instance.paintToolsHotbar.Update();
-			CheatSheet.instance.paintToolsUI.Update();
-			CheatSheet.instance.quickTeleportHotbar.Update();
-			CheatSheet.instance.quickClearHotbar.Update();
-			CheatSheet.instance.npcButchererHotbar.Update();
-			ConfigurationTool.configurationWindow.Update();
+			// CheatSheet.instance.paintToolsHotbar.Update();
+			// CheatSheet.instance.paintToolsUI.Update();
+			// CheatSheet.instance.quickTeleportHotbar.Update();
+			// CheatSheet.instance.quickClearHotbar.Update();
+			// CheatSheet.instance.npcButchererHotbar.Update();
+			// ConfigurationTool.configurationWindow.Update();
 			//BossDowner.bossDownerWindow.Update();
 			//CheatSheet.instance.eventManagerHotbar.Update();
 
 			CheatSheet.instance.hotbar.Draw(spriteBatch);
-			CheatSheet.instance.paintToolsHotbar.Draw(spriteBatch);
-			CheatSheet.instance.quickTeleportHotbar.Draw(spriteBatch);
-			CheatSheet.instance.quickClearHotbar.Draw(spriteBatch);
-			CheatSheet.instance.npcButchererHotbar.Draw(spriteBatch);
-			ConfigurationTool.configurationWindow.Draw(spriteBatch);
+			// CheatSheet.instance.paintToolsHotbar.Draw(spriteBatch);
+			// CheatSheet.instance.quickTeleportHotbar.Draw(spriteBatch);
+			// CheatSheet.instance.quickClearHotbar.Draw(spriteBatch);
+			// CheatSheet.instance.npcButchererHotbar.Draw(spriteBatch);
+			// ConfigurationTool.configurationWindow.Draw(spriteBatch);
 			//BossDowner.bossDownerWindow.Draw(spriteBatch);
 			//CheatSheet.instance.eventManagerHotbar.Draw(spriteBatch);
 
@@ -83,8 +84,8 @@ namespace CheatSheet
 
 		public void DrawUpdatePaintTools(SpriteBatch spriteBatch)
 		{
-			CheatSheet.instance.paintToolsHotbar.UpdateGameScale();
-			CheatSheet.instance.paintToolsHotbar.DrawGameScale(spriteBatch);
+			// CheatSheet.instance.paintToolsHotbar.UpdateGameScale();
+			// CheatSheet.instance.paintToolsHotbar.DrawGameScale(spriteBatch);
 		}
 
 		internal void DrawUpdateExtraAccessories(SpriteBatch spriteBatch)
@@ -92,7 +93,7 @@ namespace CheatSheet
 			if (Main.playerInventory && Main.EquipPage == 0)
 			{
 				Point value = new Point(Main.mouseX, Main.mouseY);
-				Rectangle r = new Rectangle(0, 0, (int)((float)Main.inventoryBackTexture.Width * Main.inventoryScale), (int)((float)Main.inventoryBackTexture.Height * Main.inventoryScale));
+				Rectangle r = new Rectangle(0, 0, (int)(TextureAssets.InventoryBack.Value.Width * Main.inventoryScale), (int)(TextureAssets.InventoryBack.Value.Height * Main.inventoryScale));
 
 				CheatSheetPlayer csp = Main.LocalPlayer.GetModPlayer<CheatSheetPlayer>();
 				for (int i = 0; i < csp.numberExtraAccessoriesEnabled; i++)
@@ -111,27 +112,29 @@ namespace CheatSheet
 						{
 							mH = 256;
 						}
+
 						if (mH + 600 > Main.screenHeight)
 						{
 							mH = Main.screenHeight - 600;
 						}
 					}
 
-					int num17 = Main.screenWidth - 92 - (47 * 3);
+					int num17 = Main.screenWidth - 92 - 47 * 3;
 					int num18 = /*Main.mH +*/mH + 174;
 					if (Main.netMode == 1) num17 -= 47;
-					r.X = num17/* + l * -47*/;
+					r.X = num17 /* + l * -47*/;
 					r.Y = num18 + (0 + i) * 47;
 
-					if (r.Contains(value)/* && !flag2*/)
+					if (r.Contains(value) /* && !flag2*/)
 					{
 						Main.LocalPlayer.mouseInterface = true;
 						Main.armorHide = true;
 						singleSlotArray[0] = accItem;
-						ItemSlot.Handle(singleSlotArray, ItemSlot.Context.EquipAccessory, 0);
+						ItemSlot.Handle(singleSlotArray, ItemSlot.Context.EquipAccessory);
 						accItem = singleSlotArray[0];
 						//ItemSlot.Handle(ref accItem, ItemSlot.Context.EquipAccessory);
 					}
+
 					singleSlotArray[0] = accItem;
 					ItemSlot.Draw(spriteBatch, singleSlotArray, 10, 0, new Vector2(r.X, r.Y));
 					accItem = singleSlotArray[0];
