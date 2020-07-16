@@ -252,20 +252,20 @@ namespace CheatSheet
 			// Other non-tutorial permissions.
 			// For simplicity, not doing buttons in Heros, just permissions for most tools.
 			// Could implement most without sub-menus as buttons if I have time. Right and left click support in Heros desireable.
-			var permissions = new List<ValueTuple<string, string>>() {
-				(PaintTools_Permission, PaintTools_Display),
-				(RecipeBrowser_Permission, RecipeBrowser_Display),
-				(MinionBooster_Permission,MinionBooster_Display),
-				(ClearItemNPCProjectile_Permission,ClearItemNPCProjectile_Display),
-				(ExtraAccessories_Permission,ExtraAccessories_Display),
-				(Vacuum_Permission,Vacuum_Display),
-				(NPCButcher_Permission,NPCButcher_Display),
-				(CheatSheetExtensions_Permission,CheatSheetExtensions_Display),
-				(QuickTeleport_Permission,QuickTeleport_Display),
-			};
-			foreach (var permission in permissions) {
-				herosMod.Call("AddPermission", permission.Item1, permission.Item2, (Action<bool>)((hasPermission) => HEROsPermissionChanged(permission.Item1, hasPermission)));
-			}
+			// var permissions = new List<ValueTuple<string, string>>() {
+			// 	(PaintTools_Permission, PaintTools_Display),
+			// 	(RecipeBrowser_Permission, RecipeBrowser_Display),
+			// 	(MinionBooster_Permission,MinionBooster_Display),
+			// 	(ClearItemNPCProjectile_Permission,ClearItemNPCProjectile_Display),
+			// 	(ExtraAccessories_Permission,ExtraAccessories_Display),
+			// 	(Vacuum_Permission,Vacuum_Display),
+			// 	(NPCButcher_Permission,NPCButcher_Display),
+			// 	(CheatSheetExtensions_Permission,CheatSheetExtensions_Display),
+			// 	(QuickTeleport_Permission,QuickTeleport_Display),
+			// };
+			// foreach (var permission in permissions) {
+			// 	herosMod.Call("AddPermission", permission.Item1, permission.Item2, (Action<bool>)((hasPermission) => HEROsPermissionChanged(permission.Item1, hasPermission)));
+			// }
 		}
 
 		public void HEROsPermissionChanged(string permission, bool hasPermission) {

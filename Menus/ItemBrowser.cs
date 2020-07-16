@@ -265,7 +265,7 @@ namespace CheatSheet.Menus
 				{
 					if (uIImage.ForegroundColor == buttonSelectedColor) lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
 					string currentMod = mods[lastModNameNumber];
-					itemView.selectedCategory = categories[0].Where(x => itemView.allItemsSlots[x].item.modItem != null && itemView.allItemsSlots[x].item.modItem.mod.Name == currentMod).ToArray();
+					itemView.selectedCategory = categories[0].Where(x => itemView.allItemsSlots[x].item.modItem != null && itemView.allItemsSlots[x].item.modItem.Mod.Name == currentMod).ToArray();
 					itemView.activeSlots = itemView.selectedCategory;
 					itemView.ReorderSlots();
 					bCategories[num].Tooltip = categNames[num] + ": " + currentMod;
@@ -346,7 +346,7 @@ namespace CheatSheet.Menus
 						categories[i].Add(j);
 						if (j >= ItemID.Count)
 						{
-							string modName = ItemLoader.GetItem(j).mod.Name;
+							string modName = ItemLoader.GetItem(j).Mod.Name;
 							List<int> itemInMod;
 							if (!ModToItems.TryGetValue(modName, out itemInMod)) ModToItems.Add(modName, itemInMod = new List<int>());
 							itemInMod.Add(j);

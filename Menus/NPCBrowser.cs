@@ -253,7 +253,7 @@ namespace CheatSheet.Menus
 				{
 					if (uIImage.ForegroundColor == buttonSelectedColor) lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
 					string currentMod = mods[lastModNameNumber];
-					npcView.selectedCategory = categories[0].Where(x => npcView.allNPCSlot[x].npcType >= NPCID.Count && NPCLoader.GetNPC(npcView.allNPCSlot[x].npcType).mod.Name == currentMod).ToArray();
+					npcView.selectedCategory = categories[0].Where(x => npcView.allNPCSlot[x].npcType >= NPCID.Count && NPCLoader.GetNPC(npcView.allNPCSlot[x].npcType).Mod.Name == currentMod).ToArray();
 					npcView.activeSlots = npcView.selectedCategory;
 					npcView.ReorderSlots();
 					bCategories[num].Tooltip = categNames[num] + ": " + currentMod;
@@ -337,7 +337,7 @@ namespace CheatSheet.Menus
 						categories[i].Add(j);
 						if (npcView.allNPCSlot[j].npc.type >= NPCID.Count)
 						{
-							string modName = NPCLoader.GetNPC(j).mod.Name;
+							string modName = NPCLoader.GetNPC(j).Mod.Name;
 							List<int> npcInMod;
 							if (!ModToNPCs.TryGetValue(modName, out npcInMod)) ModToNPCs.Add(modName, npcInMod = new List<int>());
 							npcInMod.Add(j);

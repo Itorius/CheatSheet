@@ -215,10 +215,10 @@ namespace CheatSheet.Menus
 					int num63 = (num62 + 1) * 26;
 					if (selectedRecipe.requiredTile[num62] == -1)
 					{
-						if (num62 == 0 && !selectedRecipe.needWater && !selectedRecipe.needHoney && !selectedRecipe.needLava)
-						{
-							spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[23].Value, new Vector2(positionX, positionY + num63), color3, 0f, default, 1f, SpriteEffects.None, 0f);
-						}
+						// if (num62 == 0 && !selectedRecipe.needWater && !selectedRecipe.needHoney && !selectedRecipe.needLava)
+						// {
+						// 	spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[23].Value, new Vector2(positionX, positionY + num63), color3, 0f, default, 1f, SpriteEffects.None, 0f);
+						// }
 
 						break;
 					}
@@ -228,23 +228,23 @@ namespace CheatSheet.Menus
 					num62++;
 				}
 
-				if (selectedRecipe.needWater)
-				{
-					int num64 = (num61 + 1) * 26;
-					spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[53].Value, new Vector2(positionX, positionY + num64), color3, 0f, default, 1f, SpriteEffects.None, 0f);
-				}
-
-				if (selectedRecipe.needHoney)
-				{
-					int num65 = (num61 + 1) * 26;
-					spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[58].Value, new Vector2(positionX, positionY + num65), color3, 0f, default, 1f, SpriteEffects.None, 0f);
-				}
-
-				if (selectedRecipe.needLava)
-				{
-					int num66 = (num61 + 1) * 26;
-					spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[56].Value, new Vector2(positionX, positionY + num66), color3, 0f, default, 1f, SpriteEffects.None, 0f);
-				}
+				// if (selectedRecipe.needWater)
+				// {
+				// 	int num64 = (num61 + 1) * 26;
+				// 	spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[53].Value, new Vector2(positionX, positionY + num64), color3, 0f, default, 1f, SpriteEffects.None, 0f);
+				// }
+				//
+				// if (selectedRecipe.needHoney)
+				// {
+				// 	int num65 = (num61 + 1) * 26;
+				// 	spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[58].Value, new Vector2(positionX, positionY + num65), color3, 0f, default, 1f, SpriteEffects.None, 0f);
+				// }
+				//
+				// if (selectedRecipe.needLava)
+				// {
+				// 	int num66 = (num61 + 1) * 26;
+				// 	spriteBatch.DrawString(FontAssets.MouseText.Value, Lang.inter[56].Value, new Vector2(positionX, positionY + num66), color3, 0f, default, 1f, SpriteEffects.None, 0f);
+				// }
 			}
 
 			//else
@@ -286,31 +286,31 @@ namespace CheatSheet.Menus
 						ingredients[i].item = selectedRecipe.requiredItem[i];
 
 						string name;
-						if (selectedRecipe.ProcessGroupsForText(selectedRecipe.requiredItem[i].type, out name))
-						{
-							Main.HoverItem.SetNameOverride(name);
-						}
+						// if (selectedRecipe.ProcessGroupsForText(selectedRecipe.requiredItem[i].type, out name))
+						// {
+							// Main.HoverItem.SetNameOverride(name);
+						// }
 
-						if (selectedRecipe.anyIronBar && selectedRecipe.requiredItem[i].type == 22)
-						{
-							Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(22));
-						}
-						else if (selectedRecipe.anyWood && selectedRecipe.requiredItem[i].type == 9)
-						{
-							Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(9));
-						}
-						else if (selectedRecipe.anySand && selectedRecipe.requiredItem[i].type == 169)
-						{
-							Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(169));
-						}
-						else if (selectedRecipe.anyFragment && selectedRecipe.requiredItem[i].type == 3458)
-						{
-							Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.misc[51]);
-						}
-						else if (selectedRecipe.anyPressurePlate && selectedRecipe.requiredItem[i].type == 542)
-						{
-							Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.misc[38]);
-						}
+						// if (selectedRecipe.anyIronBar && selectedRecipe.requiredItem[i].type == 22)
+						// {
+						// 	Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(22));
+						// }
+						// else if (selectedRecipe.anyWood && selectedRecipe.requiredItem[i].type == 9)
+						// {
+						// 	Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(9));
+						// }
+						// else if (selectedRecipe.anySand && selectedRecipe.requiredItem[i].type == 169)
+						// {
+						// 	Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.GetItemNameValue(169));
+						// }
+						// else if (selectedRecipe.anyFragment && selectedRecipe.requiredItem[i].type == 3458)
+						// {
+						// 	Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.misc[51]);
+						// }
+						// else if (selectedRecipe.anyPressurePlate && selectedRecipe.requiredItem[i].type == 542)
+						// {
+						// 	Main.HoverItem.SetNameOverride(Lang.misc[37] + " " + Lang.misc[38]);
+						// }
 						//else
 						//{
 						//	ModRecipe recipe = selectedRecipe as ModRecipe;
@@ -385,7 +385,7 @@ namespace CheatSheet.Menus
 			if (num == (int)RecipeBrowserCategories.ModRecipes)
 			{
 				var mods = ModLoader.Mods.Select(x => x.Name).ToList();
-				mods = mods.Intersect(categories[0].Select(x => (recipeView.allRecipeSlot[x].recipe as ModRecipe)?.mod.Name ?? null)).ToList();
+				mods = mods.Intersect(categories[0].Select(x => (recipeView.allRecipeSlot[x].recipe )?.Mod.Name ?? null)).ToList();
 				mods.Sort();
 				if (mods.Count == 0)
 				{
@@ -395,7 +395,7 @@ namespace CheatSheet.Menus
 
 				if (uIImage.ForegroundColor == buttonSelectedColor) lastModNameNumber = left ? (lastModNameNumber + 1) % mods.Count : (mods.Count + lastModNameNumber - 1) % mods.Count;
 				string currentMod = mods[lastModNameNumber];
-				recipeView.selectedCategory = categories[0].Where(x => recipeView.allRecipeSlot[x].recipe as ModRecipe != null && (recipeView.allRecipeSlot[x].recipe as ModRecipe).mod.Name == currentMod).ToArray();
+				recipeView.selectedCategory = categories[0].Where(x =>  (recipeView.allRecipeSlot[x].recipe ).Mod.Name == currentMod).ToArray();
 				recipeView.activeSlots = recipeView.selectedCategory;
 				recipeView.ReorderSlots();
 				bCategories[num].Tooltip = categNames[num] + ": " + currentMod;

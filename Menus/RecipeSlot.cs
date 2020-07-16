@@ -46,7 +46,7 @@ namespace CheatSheet.Menus
 			//UIView.HoverText = recipe.createItem.name;
 			Main.hoverItemName = recipe.createItem.Name;
 			Main.HoverItem = recipe.createItem.Clone();
-			Main.HoverItem.SetNameOverride(Main.HoverItem.Name + (Main.HoverItem.modItem != null ? " [" + Main.HoverItem.modItem.mod.Name + "]" : ""));
+			Main.HoverItem.SetNameOverride(Main.HoverItem.Name + (Main.HoverItem.modItem != null ? " [" + Main.HoverItem.modItem.Mod.Name + "]" : ""));
 			//UIView.HoverItem = this.item.Clone();
 			//	hovering = true;
 		}
